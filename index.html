@@ -14,6 +14,9 @@ button,input,select,textarea{font:inherit}.hide{display:none!important}.muted{co
 @media(max-width:950px){.stats{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}.backup{grid-template-columns:1fr 1fr}.filters{grid-template-columns:1fr 1fr}}
 @media(max-width:780px){.shell{display:block}.side{position:fixed;left:0;transform:translateX(-110%);transition:.2s;width:260px;z-index:50}.side.open{transform:none}.mobile{display:flex;position:sticky;top:0;z-index:40;background:var(--n);color:white;padding:11px 14px;justify-content:space-between}.main{padding:22px 14px 50px}.refgrid{grid-template-columns:1fr 1fr}.refgrid .wide{grid-column:span 2}.kwlayout,.kwtoolbar,.filters{grid-template-columns:1fr}.backup{grid-template-columns:1fr}}
 @media(max-width:500px){.authcard{padding:21px}.hero{padding:25px 20px}.hero h2{font-size:31px}.stats{gap:8px}.stat{padding:14px}.step{padding:19px 14px}.refgrid{grid-template-columns:1fr}.refgrid .wide{grid-column:auto}.actions{padding:17px 14px;flex-direction:column;align-items:stretch}.grid{grid-template-columns:1fr}}
+
+.slogan{margin:20px 0 22px;padding:17px 19px;border-left:4px solid var(--g);border-radius:0 14px 14px 0;background:#ffffff12;max-width:760px;position:relative;z-index:1}.slogan-label{text-transform:uppercase;letter-spacing:1px;font-size:9px;font-weight:900;color:#efd58e}.slogan blockquote{font:italic 19px/1.55 Georgia;margin:7px 0 5px;color:white}.slogan cite{font-style:normal;font-size:11px;color:#ffffffa8}.type-choices{display:grid;grid-template-columns:1fr 1fr;gap:12px}.type-choice{border:1px solid #cfd8e4;background:white;border-radius:14px;padding:16px;text-align:left;color:var(--t);cursor:pointer;transition:.16s}.type-choice:hover{border-color:var(--n2);transform:translateY(-1px)}.type-choice strong{display:block;font:700 22px Georgia;color:var(--n);margin-bottom:4px}.type-choice span{display:block;color:var(--m);font-size:12px;line-height:1.4}.type-choice.on{background:var(--n);border-color:var(--n);box-shadow:0 9px 20px #10243f20}.type-choice.on strong,.type-choice.on span{color:white}.tag.do{background:#e4f4ed;color:#23624f}.tag.dont{background:#fae8e8;color:#8a3c3c}.save-lock{pointer-events:none;opacity:.75}.filters{grid-template-columns:1.5fr .65fr .65fr .65fr auto}
+@media(max-width:780px){.type-choices{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -50,18 +53,18 @@ button,input,select,textarea{font:inherit}.hide{display:none!important}.muted{co
 
 <main class="main">
 <section id="dashboard" class="page on">
- <div class="hero"><div class="eyebrow" style="color:#efd58e">✦ Personal New Testament Study</div><h2>A growing library of Christian living.</h2><p>Collect passages quickly and see the themes that keep appearing as you read.</p><div class="row"><button class="btn gold" data-go="add">＋ Add a passage</button><button class="btn secondary" data-go="browse">Browse library</button></div></div>
+ <div class="hero"><div class="eyebrow" style="color:#efd58e">✦ Personal New Testament Study</div><h2>A growing library of Christian living.</h2><p>Collect passages quickly and see the themes that keep appearing as you read.</p><div id="slogan" class="slogan"><div class="slogan-label">The heart of this study</div><blockquote id="sloganText">Loading 1 John 2:6…</blockquote><cite id="sloganRef">1 John 2:6 (NIV)</cite></div><div class="row"><button class="btn gold" data-go="add">＋ Add a passage</button><button class="btn secondary" data-go="browse">Browse library</button></div></div>
  <div class="stats">
   <div class="card stat"><span>Passages</span><strong id="sPassages">0</strong><small class="muted">Saved observations</small></div>
   <div class="card stat"><span>Themes Used</span><strong id="sThemes">0</strong><small class="muted">Connected keywords</small></div>
-  <div class="card stat"><span>Books Studied</span><strong id="sBooks">0</strong><small class="muted">Out of 27 NT books</small></div>
+  <div class="card stat"><span>Books Referenced</span><strong id="sBooks">0</strong><small class="muted">Out of 27 NT books</small></div>
   <div class="card stat"><span>Leading Theme</span><strong id="sTop">—</strong><small id="sTopNote" class="muted">No entries yet</small></div>
  </div>
  <div class="two"><div class="panel"><div class="panelhead"><h3>Recent passages</h3><button class="btn secondary small" data-go="browse">View all</button></div><div id="recent"></div></div><div class="panel"><div class="panelhead"><h3>Most recorded themes</h3></div><div id="dashBars"></div></div></div>
 </section>
 
 <section id="add" class="page">
- <div class="pagehead"><div><div class="eyebrow">Quick study entry</div><h2 id="formTitle">Add a Passage</h2><p>Choose the passage, confirm the NIV text, select keywords, and write one comment.</p></div><button id="clearBtn" class="btn secondary">Clear</button></div>
+ <div class="pagehead"><div><div class="eyebrow">Quick study entry</div><h2 id="formTitle">Add a Passage</h2><p>Choose the passage, classify it as a Do or Don't, select keywords, and write one comment.</p></div><button id="clearBtn" class="btn secondary">Clear</button></div>
  <form id="passageForm" class="form">
   <input id="editId" type="hidden">
   <div class="step"><div class="stephead"><div class="stepno">1</div><div><h3>Choose the passage</h3><p>The NIV text appears for confirmation.</p></div></div>
@@ -75,11 +78,14 @@ button,input,select,textarea{font:inherit}.hide{display:none!important}.muted{co
    <div id="verseBox" class="versebox hide"><span class="badge">NIV</span><h3 id="verseRef"></h3><div id="verseText" class="scripture"></div><div id="verseCopy" class="copy"></div></div>
    <div id="dupe" class="warn hide"></div>
   </div>
-  <div class="step"><div class="stephead"><div class="stepno">2</div><div><h3>Choose keywords</h3><p>Select every theme that genuinely fits.</p></div></div>
+  <div class="step"><div class="stephead"><div class="stepno">2</div><div><h3>Is it a Do or a Don’t?</h3><p>Select one or both. You will be able to filter your library by this later.</p></div></div>
+   <div class="type-choices"><button id="typeDo" type="button" class="type-choice" aria-pressed="false"><strong>Do</strong><span>A positive instruction, practice, or virtue</span></button><button id="typeDont" type="button" class="type-choice" aria-pressed="false"><strong>Don’t</strong><span>A warning, prohibition, or behaviour to avoid</span></button></div>
+  </div>
+  <div class="step"><div class="stephead"><div class="stepno">3</div><div><h3>Choose keywords</h3><p>Select every theme that genuinely fits.</p></div></div>
    <div class="kwlayout"><div><input id="kwSearch" class="input" placeholder="Search keywords…"><div id="kwChips" class="chips"></div></div>
    <div class="newkw"><strong>Create a new keyword</strong><input id="newKw" class="input" style="margin-top:10px" placeholder="e.g. Hospitality"><select id="newCat" style="margin-top:8px"></select><button id="addKw" type="button" class="btn secondary" style="width:100%;margin-top:8px">Add and select</button></div></div>
   </div>
-  <div class="step"><div class="stephead"><div class="stepno">3</div><div><h3>Your comment</h3><p>What does this passage teach about Christian living?</p></div></div>
+  <div class="step"><div class="stephead"><div class="stepno">4</div><div><h3>Your comment</h3><p>What does this passage teach about Christian living?</p></div></div>
    <label>Your observation</label><textarea id="comment" rows="5" required placeholder="Write one clear, short observation…"></textarea>
    <label style="display:flex;align-items:center;gap:8px;font-weight:700"><input id="fav" type="checkbox"> Mark as a favourite or key passage</label>
   </div>
@@ -89,7 +95,7 @@ button,input,select,textarea{font:inherit}.hide{display:none!important}.muted{co
 
 <section id="browse" class="page">
  <div class="pagehead"><div><div class="eyebrow">Your library</div><h2>Browse Passages</h2><p>Search your comments or filter by book and theme.</p></div><button class="btn primary" data-go="add">＋ Add passage</button></div>
- <div class="filters"><input id="search" class="input" placeholder="Search reference, comment, or keyword…"><select id="bookFilter"></select><select id="kwFilter"></select><label style="display:flex;gap:7px;align-items:center;margin:0"><input id="favFilter" type="checkbox"> Favourites</label></div>
+ <div class="filters"><input id="search" class="input" placeholder="Search reference, comment, or keyword…"><select id="bookFilter"></select><select id="typeFilter"><option value="">All types</option><option value="Do">Do</option><option value="Don't">Don’t</option><option value="Unclassified">Unclassified</option></select><select id="kwFilter"></select><label style="display:flex;gap:7px;align-items:center;margin:0"><input id="favFilter" type="checkbox"> Favourites</label></div>
  <div id="browseCount" class="muted" style="font-size:12px;margin:0 0 12px"></div><div id="passageGrid" class="grid"></div>
 </section>
 
@@ -125,77 +131,724 @@ button,input,select,textarea{font:inherit}.hide{display:none!important}.muted{co
 
 <script type="module">
 import {createClient} from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
-const $=id=>document.getElementById(id),esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-const BOOKS=[["Matthew","MAT"],["Mark","MRK"],["Luke","LUK"],["John","JHN"],["Acts","ACT"],["Romans","ROM"],["1 Corinthians","1CO"],["2 Corinthians","2CO"],["Galatians","GAL"],["Ephesians","EPH"],["Philippians","PHP"],["Colossians","COL"],["1 Thessalonians","1TH"],["2 Thessalonians","2TH"],["1 Timothy","1TI"],["2 Timothy","2TI"],["Titus","TIT"],["Philemon","PHM"],["Hebrews","HEB"],["James","JAS"],["1 Peter","1PE"],["2 Peter","2PE"],["1 John","1JN"],["2 John","2JN"],["3 John","3JN"],["Jude","JUD"],["Revelation","REV"]].map((x,i)=>({name:x[0],code:x[1],order:i+1}));
-const CATS=["Love & Relationships","Speech","Character","Spiritual Life","Community & Service","Money & Stewardship","Purity & Self-Control","Justice & Mercy","Work & Responsibility","Suffering & Perseverance","Truth & Wisdom","Other"];
-const START=[["Love","Love & Relationships"],["Forgiveness","Love & Relationships"],["Reconciliation","Love & Relationships"],["Enemies","Love & Relationships"],["Gossip","Speech"],["Slander","Speech"],["Truthful Speech","Speech"],["Encouragement","Speech"],["Humility","Character"],["Patience","Character"],["Kindness","Character"],["Self-Control","Character"],["Integrity","Character"],["Contentment","Character"],["Prayer","Spiritual Life"],["Faith","Spiritual Life"],["Worship","Spiritual Life"],["Obedience","Spiritual Life"],["Holy Spirit","Spiritual Life"],["Unity","Community & Service"],["Service","Community & Service"],["Hospitality","Community & Service"],["Church","Community & Service"],["Generosity","Money & Stewardship"],["Money","Money & Stewardship"],["Stewardship","Money & Stewardship"],["Greed","Money & Stewardship"],["Sexual Purity","Purity & Self-Control"],["Temptation","Purity & Self-Control"],["Justice","Justice & Mercy"],["Mercy","Justice & Mercy"],["Care for the Poor","Justice & Mercy"],["Work","Work & Responsibility"],["Responsibility","Work & Responsibility"],["Perseverance","Suffering & Perseverance"],["Suffering","Suffering & Perseverance"],["Hope","Suffering & Perseverance"],["Wisdom","Truth & Wisdom"],["False Teaching","Truth & Wisdom"],["Discernment","Truth & Wisdom"]];
-let sb,session,mode="signin",passages=[],keywords=[],links=[],selected=new Set(),current=null,blockDupe=false,timer;
-const toast=m=>{const e=$("toast");e.textContent=m;e.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("show"),2800)};
-const busy=(b,on,txt="Working…")=>{if(on){b.dataset.restoreText=b.textContent;b.disabled=true;b.textContent=txt}else{b.disabled=false;b.textContent=b.dataset.restoreText||b.textContent;delete b.dataset.restoreText}};
-const fmt=d=>d?new Date(d).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"}):"";
-const kwFor=id=>{const ids=new Set(links.filter(x=>x.passage_id===id).map(x=>x.keyword_id));return keywords.filter(k=>ids.has(k.id))};
-const usage=()=>{const o=Object.fromEntries(keywords.map(k=>[k.id,0]));links.forEach(x=>o[x.keyword_id]=(o[x.keyword_id]||0)+1);return o};
-const empty=(t,p)=>`<div class="empty"><h3>${t}</h3><p>${p}</p></div>`;
-function page(id){document.querySelectorAll(".page").forEach(x=>x.classList.toggle("on",x.id===id));document.querySelectorAll("[data-page]").forEach(x=>x.classList.toggle("on",x.dataset.page===id));$("side").classList.remove("open");render()}
+
+const $ = id => document.getElementById(id);
+const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[char]));
+const BOOKS = [["Matthew","MAT"],["Mark","MRK"],["Luke","LUK"],["John","JHN"],["Acts","ACT"],["Romans","ROM"],["1 Corinthians","1CO"],["2 Corinthians","2CO"],["Galatians","GAL"],["Ephesians","EPH"],["Philippians","PHP"],["Colossians","COL"],["1 Thessalonians","1TH"],["2 Thessalonians","2TH"],["1 Timothy","1TI"],["2 Timothy","2TI"],["Titus","TIT"],["Philemon","PHM"],["Hebrews","HEB"],["James","JAS"],["1 Peter","1PE"],["2 Peter","2PE"],["1 John","1JN"],["2 John","2JN"],["3 John","3JN"],["Jude","JUD"],["Revelation","REV"]].map((item,index)=>({name:item[0],code:item[1],order:index+1}));
+const CATS = ["Love & Relationships","Speech","Character","Spiritual Life","Community & Service","Money & Stewardship","Purity & Self-Control","Justice & Mercy","Work & Responsibility","Suffering & Perseverance","Truth & Wisdom","Other"];
+const START = [["Love","Love & Relationships"],["Forgiveness","Love & Relationships"],["Reconciliation","Love & Relationships"],["Enemies","Love & Relationships"],["Gossip","Speech"],["Slander","Speech"],["Truthful Speech","Speech"],["Encouragement","Speech"],["Humility","Character"],["Patience","Character"],["Kindness","Character"],["Self-Control","Character"],["Integrity","Character"],["Contentment","Character"],["Prayer","Spiritual Life"],["Faith","Spiritual Life"],["Worship","Spiritual Life"],["Obedience","Spiritual Life"],["Holy Spirit","Spiritual Life"],["Unity","Community & Service"],["Service","Community & Service"],["Hospitality","Community & Service"],["Church","Community & Service"],["Generosity","Money & Stewardship"],["Money","Money & Stewardship"],["Stewardship","Money & Stewardship"],["Greed","Money & Stewardship"],["Sexual Purity","Purity & Self-Control"],["Temptation","Purity & Self-Control"],["Justice","Justice & Mercy"],["Mercy","Justice & Mercy"],["Care for the Poor","Justice & Mercy"],["Work","Work & Responsibility"],["Responsibility","Work & Responsibility"],["Perseverance","Suffering & Perseverance"],["Suffering","Suffering & Perseverance"],["Hope","Suffering & Perseverance"],["Wisdom","Truth & Wisdom"],["False Teaching","Truth & Wisdom"],["Discernment","Truth & Wisdom"]];
+
+let sb;
+let session = null;
+let mode = "signin";
+let passages = [];
+let keywords = [];
+let links = [];
+let selectedKeywords = new Set();
+let selectedTypes = new Set();
+let currentPassage = null;
+let exactDuplicateBlocked = false;
+let allowExactDuplicate = false;
+let verseTimer;
+let enterPromise = null;
+let activeUserId = null;
+let isSaving = false;
+let requestId = makeRequestId();
+let lastAttemptFingerprint = "";
+let sloganLoaded = false;
+
+function makeRequestId(){
+  return globalThis.crypto?.randomUUID?.() || `req-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+function toast(message){
+  const element = $("toast");
+  element.textContent = message;
+  element.classList.add("show");
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(()=>element.classList.remove("show"),3200);
+}
+function busy(button,on,text="Working…"){
+  if(on){
+    button.dataset.originalText=button.textContent;
+    button.disabled=true;
+    button.textContent=text;
+  }else{
+    button.disabled=false;
+    button.textContent=button.dataset.originalText||button.textContent;
+  }
+}
+function formatDate(value){
+  return value ? new Date(value).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"}) : "";
+}
+function classificationsFor(passage){
+  return Array.isArray(passage.classifications) ? passage.classifications : [];
+}
+function keywordLinksFor(passageId){
+  return links.filter(link=>link.passage_id===passageId);
+}
+function keywordsFor(passageId){
+  const ids = new Set(keywordLinksFor(passageId).map(link=>link.keyword_id));
+  return keywords.filter(keyword=>ids.has(keyword.id));
+}
+function usage(){
+  const counts = Object.fromEntries(keywords.map(keyword=>[keyword.id,0]));
+  links.forEach(link=>counts[link.keyword_id]=(counts[link.keyword_id]||0)+1);
+  return counts;
+}
+function empty(title,paragraph){
+  return `<div class="empty"><h3>${esc(title)}</h3><p>${esc(paragraph)}</p></div>`;
+}
+function classificationTags(passage){
+  return classificationsFor(passage).map(type=>`<span class="tag ${type==="Do"?"do":"dont"}">${type==="Don't"?"Don’t":type}</span>`).join("");
+}
+
+function page(id){
+  document.querySelectorAll(".page").forEach(section=>section.classList.toggle("on",section.id===id));
+  document.querySelectorAll("[data-page]").forEach(button=>button.classList.toggle("on",button.dataset.page===id));
+  $("side").classList.remove("open");
+  render();
+  if(id==="dashboard") loadSlogan();
+}
+
 function bind(){
- document.querySelectorAll("[data-page]").forEach(b=>b.onclick=()=>page(b.dataset.page));document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>page(b.dataset.go));
- $("menuBtn").onclick=()=>$("side").classList.toggle("open");$("logout").onclick=()=>sb.auth.signOut();
- document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>setMode(b.dataset.mode));$("authForm").onsubmit=auth;
- ["book","chapter","verse"].forEach(id=>$(id).oninput=schedule);$("loadVerse").onclick=loadVerse;$("kwSearch").oninput=renderChips;$("addKw").onclick=addKwForm;$("comment").oninput=readiness;
- $("passageForm").onsubmit=savePassage;$("clearBtn").onclick=clearForm;$("cancelEdit").onclick=()=>{clearForm();page("browse")};
- ["search","bookFilter","kwFilter","favFilter"].forEach(id=>$(id).oninput=renderBrowse);$("kwPageSearch").oninput=renderKwPage;$("catFilter").oninput=renderKwPage;
- $("showCreator").onclick=()=>$("creator").classList.toggle("hide");$("creatorSave").onclick=addKwPage;
- $("exportJson").onclick=exportJSON;$("exportCsv").onclick=exportCSV;$("restoreBtn").onclick=()=>$("restoreFile").click();$("restoreFile").onchange=restore;
- $("closeModal").onclick=()=>$("modal").classList.add("hide");$("modal").onclick=e=>{if(e.target===$("modal"))$("modal").classList.add("hide")};
+  document.querySelectorAll("[data-page]").forEach(button=>button.onclick=()=>page(button.dataset.page));
+  document.querySelectorAll("[data-go]").forEach(button=>button.onclick=()=>page(button.dataset.go));
+  $("menuBtn").onclick=()=>$("side").classList.toggle("open");
+  $("logout").onclick=()=>sb.auth.signOut();
+  document.querySelectorAll("[data-mode]").forEach(button=>button.onclick=()=>setMode(button.dataset.mode));
+  $("authForm").onsubmit=auth;
+  ["book","chapter","verse"].forEach(id=>$(id).oninput=scheduleVerseLoad);
+  $("loadVerse").onclick=loadVerse;
+  $("typeDo").onclick=()=>toggleType("Do");
+  $("typeDont").onclick=()=>toggleType("Don't");
+  $("kwSearch").oninput=renderKeywordChips;
+  $("addKw").onclick=addKeywordFromForm;
+  $("comment").oninput=readiness;
+  $("passageForm").onsubmit=savePassage;
+  $("clearBtn").onclick=clearForm;
+  $("cancelEdit").onclick=()=>{clearForm();page("browse")};
+  ["search","bookFilter","typeFilter","kwFilter","favFilter"].forEach(id=>$(id).oninput=renderBrowse);
+  $("kwPageSearch").oninput=renderKeywordPage;
+  $("catFilter").oninput=renderKeywordPage;
+  $("showCreator").onclick=()=>$("creator").classList.toggle("hide");
+  $("creatorSave").onclick=addKeywordFromPage;
+  $("exportJson").onclick=exportJSON;
+  $("exportCsv").onclick=exportCSV;
+  $("restoreBtn").onclick=()=>$("restoreFile").click();
+  $("restoreFile").onchange=restore;
+  $("closeModal").onclick=()=>$("modal").classList.add("hide");
+  $("modal").onclick=event=>{if(event.target===$("modal")) $("modal").classList.add("hide")};
 }
+
 function populate(){
- $("book").innerHTML=`<option value="">Choose a book</option>${BOOKS.map(b=>`<option>${b.name}</option>`).join("")}`;
- $("bookFilter").innerHTML=`<option value="">All books</option>${BOOKS.map(b=>`<option>${b.name}</option>`).join("")}`;
- const c=CATS.map(x=>`<option>${x}</option>`).join("");$("newCat").innerHTML=c;$("creatorCat").innerHTML=c;$("catFilter").innerHTML=`<option value="">All categories</option>${c}`;
+  $("book").innerHTML=`<option value="">Choose a book</option>${BOOKS.map(book=>`<option>${book.name}</option>`).join("")}`;
+  $("bookFilter").innerHTML=`<option value="">All books</option>${BOOKS.map(book=>`<option>${book.name}</option>`).join("")}`;
+  const categories=CATS.map(category=>`<option>${category}</option>`).join("");
+  $("newCat").innerHTML=categories;
+  $("creatorCat").innerHTML=categories;
+  $("catFilter").innerHTML=`<option value="">All categories</option>${categories}`;
 }
-function setMode(m){mode=m;document.querySelectorAll("[data-mode]").forEach(b=>b.classList.toggle("on",b.dataset.mode===m));$("authBtn").textContent=m==="signin"?"Sign in":"Create account";$("authMsg").classList.add("hide")}
-async function auth(e){e.preventDefault();busy($("authBtn"),true,mode==="signin"?"Signing in…":"Creating…");try{let r;if(mode==="signin")r=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});else r=await sb.auth.signUp({email:$("email").value.trim(),password:$("password").value,options:{emailRedirectTo:location.origin}});if(r.error)throw r.error;if(mode==="signup"&&!r.data.session){$("authMsg").textContent="Account created. Check your email, confirm it, then return to sign in.";$("authMsg").className="msg ok"}}catch(e){$("authMsg").textContent=e.message;$("authMsg").className="msg err"}finally{busy($("authBtn"),false)}}
+
+function setMode(nextMode){
+  mode=nextMode;
+  document.querySelectorAll("[data-mode]").forEach(button=>button.classList.toggle("on",button.dataset.mode===nextMode));
+  $("authBtn").textContent=nextMode==="signin"?"Sign in":"Create account";
+  $("authMsg").classList.add("hide");
+}
+
+async function auth(event){
+  event.preventDefault();
+  busy($("authBtn"),true,mode==="signin"?"Signing in…":"Creating…");
+  try{
+    const email=$("email").value.trim();
+    const password=$("password").value;
+    const result=mode==="signin"
+      ? await sb.auth.signInWithPassword({email,password})
+      : await sb.auth.signUp({email,password,options:{emailRedirectTo:location.origin}});
+    if(result.error) throw result.error;
+    if(mode==="signup"&&!result.data.session){
+      $("authMsg").textContent="Account created. Check your email, confirm it, then return to sign in.";
+      $("authMsg").className="msg ok";
+    }
+  }catch(error){
+    $("authMsg").textContent=error.message;
+    $("authMsg").className="msg err";
+  }finally{
+    busy($("authBtn"),false);
+  }
+}
+
 async function init(){
- bind();populate();
- try{const r=await fetch("/api/config",{cache:"no-store"}),c=await r.json();if(!r.ok)throw Error(c.error);sb=createClient(c.supabaseUrl,c.supabaseKey,{auth:{persistSession:true,detectSessionInUrl:true,autoRefreshToken:true}});
- sb.auth.onAuthStateChange(async(_,s)=>{session=s;if(s)await enter();else showAuth()});const g=await sb.auth.getSession();if(g.error)throw g.error;session=g.data.session;if(session)await enter();else showAuth()}catch(e){$("loading").classList.add("hide");$("auth").classList.remove("hide");$("authMsg").textContent=e.message;$("authMsg").className="msg err"}}
-function showAuth(){$("loading").classList.add("hide");$("shell").classList.add("hide");$("auth").classList.remove("hide")}
-async function enter(){$("loading").classList.remove("hide");$("auth").classList.add("hide");$("acct").textContent=session.user.email||"";window.fums?.("config",{userId:session.user.id});await starters();await load();$("loading").classList.add("hide");$("shell").classList.remove("hide")}
-async function starters(){const r=await sb.from("keywords").select("*",{count:"exact",head:true});if(r.error)throw r.error;if(!r.count){const q=await sb.from("keywords").insert(START.map(x=>({name:x[0],category:x[1]})));if(q.error)throw q.error}}
-async function load(){const [p,k,l]=await Promise.all([sb.from("passages").select("*").order("created_at",{ascending:false}),sb.from("keywords").select("*").order("name"),sb.from("passage_keywords").select("*")]);if(p.error)throw p.error;if(k.error)throw k.error;if(l.error)throw l.error;passages=p.data;keywords=k.data;links=l.data;render()}
-function render(){renderFilters();renderDash();renderChips();renderBrowse();renderKwPage();renderInsights();readiness()}
-function renderFilters(){const v=$("kwFilter").value;$("kwFilter").innerHTML=`<option value="">All keywords</option>${keywords.map(k=>`<option value="${k.id}">${esc(k.name)}</option>`).join("")}`;if([...$("kwFilter").options].some(o=>o.value===v))$("kwFilter").value=v}
-function bars(items){if(!items.length)return`<span class="muted">No data yet.</span>`;const m=Math.max(...items.map(x=>x.count),1);return`<div class="bars">${items.map(x=>`<div><div class="bartop"><b>${esc(x.name)}</b><span>${x.count}</span></div><div class="track"><div class="fill" style="width:${Math.max(6,x.count/m*100)}%"></div></div></div>`).join("")}</div>`}
-function renderDash(){const u=usage(),top=keywords.map(k=>({...k,count:u[k.id]||0})).sort((a,b)=>b.count-a.count)[0];$("sPassages").textContent=passages.length;$("sThemes").textContent=new Set(links.map(x=>x.keyword_id)).size;$("sBooks").textContent=new Set(passages.map(x=>x.book)).size;$("sTop").textContent=top?.count?top.name:"—";$("sTopNote").textContent=top?.count?`${top.count} passage${top.count===1?"":"s"}`:"No entries yet";
- $("recent").innerHTML=passages.length?passages.slice(0,5).map(p=>`<div style="padding:11px;border:1px solid var(--l);border-radius:11px;margin-bottom:8px"><b style="color:var(--n)">${esc(p.reference)}</b><div class="muted" style="font-size:12px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.comment)}</div></div>`).join(""):empty("Your library is ready","Add your first passage.");
- $("dashBars").innerHTML=bars(keywords.map(k=>({name:k.name,count:u[k.id]||0})).filter(x=>x.count).sort((a,b)=>b.count-a.count).slice(0,7))}
-function parseRange(s){const m=s.trim().replace(/[–—]/g,"-").match(/^(\d+)(?:\s*-\s*(\d+))?$/);if(!m)return null;const a=+m[1],b=+(m[2]||m[1]);return a>0&&b>=a?{a,b}:null}
-function selection(show=true){const b=BOOKS.find(x=>x.name===$("book").value),c=+$("chapter").value,r=parseRange($("verse").value);if(!b||!Number.isInteger(c)||c<1||!r){if(show)toast("Choose a valid book, chapter, and verse.");return null}return{book:b,chapter:c,start:r.a,end:r.b,id:`${b.code}.${c}.${r.a}-${b.code}.${c}.${r.b}`}}
-function schedule(){current=null;$("verseBox").classList.add("hide");$("dupe").classList.add("hide");readiness();clearTimeout(timer);timer=setTimeout(()=>{if(selection(false))loadVerse()},700)}
-async function loadVerse(){const s=selection();if(!s)return;busy($("loadVerse"),true,"Loading…");$("verseStatus").textContent="Retrieving NIV passage…";try{const r=await fetch(`/api/verse?passageId=${encodeURIComponent(s.id)}`,{cache:"no-store"}),d=await r.json();if(!r.ok)throw Error(d.error);current={...s,...d,requestId:s.id};$("verseRef").textContent=d.reference;$("verseText").textContent=String(d.content||"").replace(/\s+/g," ").trim();$("verseCopy").textContent=d.copyright||"";$("verseBox").classList.remove("hide");$("verseStatus").textContent="NIV passage loaded. Confirm it below.";if(d.fumsToken)window.fums?.("trackView",d.fumsToken);dupes(s)}catch(e){current=null;$("verseStatus").textContent=e.message;toast(e.message)}finally{busy($("loadVerse"),false);readiness()}}
-const key=(o,c,v)=>o*1000000+c*1000+v;
-function dupes(s){const start=key(s.book.order,s.chapter,s.start),end=key(s.book.order,s.chapter,s.end),edit=$("editId").value,found=passages.filter(p=>p.id!==edit&&+p.book_order===s.book.order&&+p.start_key<=end&&+p.end_key>=start).map(p=>({...p,exact:+p.start_key===start&&+p.end_key===end}));blockDupe=found.some(x=>x.exact);if(!found.length){$("dupe").classList.add("hide");readiness();return}$("dupe").className=`warn ${blockDupe?"exact":""}`;$("dupe").innerHTML=`<b>${blockDupe?"You have already added this passage.":"This overlaps an earlier entry."}</b>${found.map(p=>`<div style="margin-top:9px;padding-top:8px;border-top:1px solid #0002"><strong>${esc(p.reference)}</strong><div style="font-size:12px;margin-top:4px">${esc(p.comment)}</div><small>${esc(kwFor(p.id).map(k=>k.name).join(", "))}</small></div>`).join("")}${blockDupe?`<label style="display:flex;gap:7px;align-items:flex-start;font-size:12px"><input id="allowDupe" type="checkbox"> Save a second comment for this exact passage anyway</label>`:""}`;$("dupe").classList.remove("hide");$("allowDupe")?.addEventListener("change",e=>{blockDupe=!e.target.checked;readiness()});readiness()}
-function renderChips(){const q=$("kwSearch").value.toLowerCase();$("kwChips").innerHTML=keywords.filter(k=>!q||`${k.name} ${k.category}`.toLowerCase().includes(q)).map(k=>`<button type="button" class="chip ${selected.has(k.id)?"on":""}" data-chip="${k.id}">${esc(k.name)}</button>`).join("");document.querySelectorAll("[data-chip]").forEach(b=>b.onclick=()=>{selected.has(b.dataset.chip)?selected.delete(b.dataset.chip):selected.add(b.dataset.chip);renderChips();readiness()})}
-async function makeKw(name,cat){name=name.trim();if(!name)throw Error("Enter a keyword name.");const old=keywords.find(k=>k.name.toLowerCase()===name.toLowerCase());if(old)return old;const r=await sb.from("keywords").insert({name,category:cat||"Other"}).select().single();if(r.error)throw r.error;keywords.push(r.data);keywords.sort((a,b)=>a.name.localeCompare(b.name));return r.data}
-async function addKwForm(){try{busy($("addKw"),true,"Adding…");const k=await makeKw($("newKw").value,$("newCat").value);selected.add(k.id);$("newKw").value="";$("kwSearch").value="";render();toast("Keyword added and selected.")}catch(e){toast(e.message)}finally{busy($("addKw"),false)}}
-async function addKwPage(){try{busy($("creatorSave"),true,"Saving…");await makeKw($("creatorName").value,$("creatorCat").value);$("creatorName").value="";$("creator").classList.add("hide");render();toast("Keyword created.")}catch(e){toast(e.message)}finally{busy($("creatorSave"),false)}}
-function readiness(){const ok=current&&selected.size&&$("comment").value.trim()&&!blockDupe;$("save").disabled=!ok;$("ready").textContent=!current?"Load a valid passage before saving.":blockDupe?"Confirm the exact duplicate first.":!selected.size?"Select at least one keyword.":!$("comment").value.trim()?"Write your comment.":"Ready to save."}
-async function savePassage(e){e.preventDefault();if($("save").disabled)return;const edit=$("editId").value,p={book:current.book.name,book_order:current.book.order,start_chapter:current.chapter,start_verse:current.start,end_chapter:current.chapter,end_verse:current.end,reference:current.reference,bible_id:current.bibleId,api_passage_id:current.requestId||current.id,translation:"NIV",comment:$("comment").value.trim(),is_favorite:$("fav").checked};busy($("save"),true,edit?"Updating…":"Saving…");try{let id=edit;if(edit){let r=await sb.from("passages").update(p).eq("id",edit);if(r.error)throw r.error;r=await sb.from("passage_keywords").delete().eq("passage_id",edit);if(r.error)throw r.error}else{const r=await sb.from("passages").insert(p).select("id").single();if(r.error)throw r.error;id=r.data.id}const r=await sb.from("passage_keywords").insert([...selected].map(keyword_id=>({passage_id:id,keyword_id})));if(r.error)throw r.error;await load();clearForm();page("browse");toast(edit?"Passage updated.":"Passage saved.")}catch(e){toast(e.message)}finally{busy($("save"),false)}}
-function clearForm(){$("passageForm").reset();$("editId").value="";$("formTitle").textContent="Add a Passage";$("save").textContent="Save passage";$("cancelEdit").classList.add("hide");$("verseBox").classList.add("hide");$("dupe").classList.add("hide");$("verseStatus").textContent="Select a New Testament passage.";current=null;selected=new Set();blockDupe=false;renderChips();readiness()}
-async function editPassage(id){const p=passages.find(x=>x.id===id);if(!p)return;page("add");$("editId").value=id;$("formTitle").textContent="Edit Passage";$("save").textContent="Update passage";$("cancelEdit").classList.remove("hide");$("book").value=p.book;$("chapter").value=p.start_chapter;$("verse").value=p.start_verse===p.end_verse?p.start_verse:`${p.start_verse}-${p.end_verse}`;$("comment").value=p.comment;$("fav").checked=p.is_favorite;selected=new Set(links.filter(x=>x.passage_id===id).map(x=>x.keyword_id));renderChips();await loadVerse()}
-async function delPassage(id){const p=passages.find(x=>x.id===id);if(!p||!confirm(`Delete ${p.reference}?`))return;const r=await sb.from("passages").delete().eq("id",id);if(r.error)return toast(r.error.message);await load();toast("Passage deleted.")}
-async function toggleFav(id){const p=passages.find(x=>x.id===id);const r=await sb.from("passages").update({is_favorite:!p.is_favorite}).eq("id",id);if(r.error)return toast(r.error.message);p.is_favorite=!p.is_favorite;render()}
-function renderBrowse(){const q=$("search").value.toLowerCase(),b=$("bookFilter").value,k=$("kwFilter").value,f=$("favFilter").checked;const list=passages.filter(p=>{const names=kwFor(p.id).map(x=>x.name);return(!q||`${p.reference} ${p.comment} ${names}`.toLowerCase().includes(q))&&(!b||p.book===b)&&(!k||links.some(x=>x.passage_id===p.id&&x.keyword_id===k))&&(!f||p.is_favorite)});$("browseCount").textContent=`${list.length} of ${passages.length} passages shown`;$("passageGrid").innerHTML=list.length?list.map(p=>`<article class="card passage"><div class="ptop"><div><h3>${esc(p.reference)}</h3><small class="muted">NIV</small></div><button class="star ${p.is_favorite?"on":""}" data-fav="${p.id}">${p.is_favorite?"★":"☆"}</button></div><p class="comment">${esc(p.comment)}</p><div class="tags">${kwFor(p.id).map(x=>`<span class="tag">${esc(x.name)}</span>`).join("")}</div><div class="foot"><small class="muted">${fmt(p.created_at)}</small><div class="row"><button class="btn secondary small" data-view="${p.id}">View</button><button class="btn secondary small" data-edit="${p.id}">Edit</button><button class="btn secondary small" data-del="${p.id}">Delete</button></div></div></article>`).join(""):empty("No passages found",passages.length?"Try another filter.":"Add your first passage.");document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>viewPassage(b.dataset.view));document.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>editPassage(b.dataset.edit));document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>delPassage(b.dataset.del));document.querySelectorAll("[data-fav]").forEach(b=>b.onclick=()=>toggleFav(b.dataset.fav))}
-async function viewPassage(id){const p=passages.find(x=>x.id===id);$("mRef").textContent=p.reference;$("mComment").textContent=p.comment;$("mTags").innerHTML=kwFor(id).map(k=>`<span class="tag">${esc(k.name)}</span>`).join("");$("mLoading").classList.remove("hide");$("mText").classList.add("hide");$("mCopy").textContent="";$("modal").classList.remove("hide");try{const r=await fetch(`/api/verse?passageId=${encodeURIComponent(p.api_passage_id)}`,{cache:"no-store"}),d=await r.json();if(!r.ok)throw Error(d.error);$("mRef").textContent=d.reference;$("mText").textContent=String(d.content||"").replace(/\s+/g," ").trim();$("mCopy").textContent=d.copyright||"";$("mLoading").classList.add("hide");$("mText").classList.remove("hide");if(d.fumsToken)window.fums?.("trackView",d.fumsToken)}catch(e){$("mLoading").textContent=e.message}}
-function renderKwPage(){const u=usage(),q=$("kwPageSearch").value.toLowerCase(),c=$("catFilter").value;const list=keywords.filter(k=>(!q||k.name.toLowerCase().includes(q))&&(!c||k.category===c)).sort((a,b)=>(u[b.id]||0)-(u[a.id]||0)||a.name.localeCompare(b.name));$("kwGrid").innerHTML=list.map(k=>`<div class="card kwcard"><div class="kwtop"><div><h3 style="margin:0;color:var(--n)">${esc(k.name)}</h3><small class="muted">${esc(k.category)}</small></div><div class="count">${u[k.id]||0}</div></div><div class="row" style="margin-top:13px"><button class="btn secondary small" data-kview="${k.id}">View passages</button><button class="btn secondary small" data-kdel="${k.id}" ${(u[k.id]||0)?"disabled":""}>Delete</button></div></div>`).join("");document.querySelectorAll("[data-kview]").forEach(b=>b.onclick=()=>{$("kwFilter").value=b.dataset.kview;page("browse")});document.querySelectorAll("[data-kdel]").forEach(b=>b.onclick=()=>delKw(b.dataset.kdel))}
-async function delKw(id){if(usage()[id])return toast("This keyword is still used.");const k=keywords.find(x=>x.id===id);if(!confirm(`Delete ${k.name}?`))return;const r=await sb.from("keywords").delete().eq("id",id);if(r.error)return toast(r.error.message);await load()}
-function renderInsights(){const u=usage(),books={},cats={};passages.forEach(p=>books[p.book]=(books[p.book]||0)+1);links.forEach(l=>{const k=keywords.find(x=>x.id===l.keyword_id);if(k)cats[k.category]=(cats[k.category]||0)+1});$("iKw").innerHTML=bars(keywords.map(k=>({name:k.name,count:u[k.id]||0})).filter(x=>x.count).sort((a,b)=>b.count-a.count).slice(0,10));$("iBooks").innerHTML=bars(Object.entries(books).map(([name,count])=>({name,count})).sort((a,b)=>b.count-a.count));$("iCats").innerHTML=bars(Object.entries(cats).map(([name,count])=>({name,count})).sort((a,b)=>b.count-a.count));$("snapshot").innerHTML=`<div class="stats" style="grid-template-columns:1fr 1fr;margin:0"><div class="card stat"><span>Passages</span><strong>${passages.length}</strong></div><div class="card stat"><span>Favourites</span><strong>${passages.filter(p=>p.is_favorite).length}</strong></div><div class="card stat"><span>Themes</span><strong>${new Set(links.map(x=>x.keyword_id)).size}</strong></div><div class="card stat"><span>Books</span><strong>${new Set(passages.map(p=>p.book)).size}</strong></div></div>`}
-function backup(){return{app:"Walk Worthy",version:2,exported_at:new Date().toISOString(),passages:passages.map(({user_id,start_key,end_key,...x})=>x),keywords:keywords.map(({user_id,...x})=>x),passage_keywords:links.map(({user_id,...x})=>x)}}
-function download(name,text,type){const a=document.createElement("a"),u=URL.createObjectURL(new Blob([text],{type}));a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
-function exportJSON(){download(`walk-worthy-backup-${new Date().toISOString().slice(0,10)}.json`,JSON.stringify(backup(),null,2),"application/json")}
-function csvCell(v){return`"${String(v??"").replace(/"/g,'""')}"`}
-function exportCSV(){const rows=[["Reference","Book","Chapter","Verse Range","Comment","Keywords","Favourite","Created"],...passages.map(p=>[p.reference,p.book,p.start_chapter,p.start_verse===p.end_verse?p.start_verse:`${p.start_verse}-${p.end_verse}`,p.comment,kwFor(p.id).map(k=>k.name).join("; "),p.is_favorite?"Yes":"No",p.created_at])];download(`walk-worthy-passages-${new Date().toISOString().slice(0,10)}.csv`,"\uFEFF"+rows.map(r=>r.map(csvCell).join(",")).join("\n"),"text/csv")}
-async function restore(e){const f=e.target.files[0];e.target.value="";if(!f)return;try{const d=JSON.parse(await f.text());if(d.app!=="Walk Worthy"||!Array.isArray(d.passages)||!Array.isArray(d.keywords)||!Array.isArray(d.passage_keywords))throw Error("Invalid Walk Worthy backup.");if(!confirm("Replace all current data with this backup?"))return;$("loading").classList.remove("hide");let r=await sb.from("passage_keywords").delete().neq("passage_id","00000000-0000-0000-0000-000000000000");if(r.error)throw r.error;r=await sb.from("passages").delete().neq("id","00000000-0000-0000-0000-000000000000");if(r.error)throw r.error;r=await sb.from("keywords").delete().neq("id","00000000-0000-0000-0000-000000000000");if(r.error)throw r.error;if(d.keywords.length){r=await sb.from("keywords").insert(d.keywords.map(({user_id,...x})=>x));if(r.error)throw r.error}if(d.passages.length){r=await sb.from("passages").insert(d.passages.map(({user_id,start_key,end_key,...x})=>x));if(r.error)throw r.error}if(d.passage_keywords.length){r=await sb.from("passage_keywords").insert(d.passage_keywords.map(({user_id,...x})=>x));if(r.error)throw r.error}await load();page("dashboard");toast("Backup restored.")}catch(e){toast(e.message)}finally{$("loading").classList.add("hide")}}
+  bind();
+  populate();
+  try{
+    const response=await fetch("/api/config",{cache:"no-store"});
+    const config=await response.json();
+    if(!response.ok) throw new Error(config.error);
+    sb=createClient(config.supabaseUrl,config.supabaseKey,{auth:{persistSession:true,detectSessionInUrl:true,autoRefreshToken:true}});
+
+    // Keep the auth callback synchronous. Supabase calls are deferred outside it.
+    sb.auth.onAuthStateChange((event,nextSession)=>{
+      session=nextSession;
+      if(event==="SIGNED_OUT"){
+        setTimeout(()=>showAuth(),0);
+      }else if(event==="SIGNED_IN"){
+        setTimeout(()=>enter(),0);
+      }
+    });
+
+    const result=await sb.auth.getSession();
+    if(result.error) throw result.error;
+    session=result.data.session;
+    if(session) await enter(); else showAuth();
+  }catch(error){
+    $("loading").classList.add("hide");
+    $("auth").classList.remove("hide");
+    $("authMsg").textContent=error.message;
+    $("authMsg").className="msg err";
+  }
+}
+
+function showAuth(){
+  activeUserId=null;
+  sloganLoaded=false;
+  $("loading").classList.add("hide");
+  $("shell").classList.add("hide");
+  $("auth").classList.remove("hide");
+}
+
+async function enter(){
+  if(!session) return showAuth();
+  if(enterPromise) return enterPromise;
+  if(activeUserId===session.user.id&&!$("shell").classList.contains("hide")) return;
+
+  enterPromise=(async()=>{
+    $("loading").classList.remove("hide");
+    $("auth").classList.add("hide");
+    $("acct").textContent=session.user.email||"";
+    window.fums?.("config",{userId:session.user.id});
+    try{
+      await ensureStarterKeywords();
+      await load();
+      activeUserId=session.user.id;
+      $("shell").classList.remove("hide");
+      loadSlogan();
+    }catch(error){
+      $("shell").classList.remove("hide");
+      toast(`Could not load your library: ${error.message}`);
+    }finally{
+      $("loading").classList.add("hide");
+    }
+  })().finally(()=>{enterPromise=null});
+
+  return enterPromise;
+}
+
+async function ensureStarterKeywords(){
+  const result=await sb.from("keywords").select("*",{count:"exact",head:true});
+  if(result.error) throw result.error;
+  if(!result.count){
+    const inserted=await sb.from("keywords").insert(START.map(item=>({name:item[0],category:item[1]})));
+    if(inserted.error) throw inserted.error;
+  }
+}
+
+async function load(){
+  const [passageResult,keywordResult,linkResult]=await Promise.all([
+    sb.from("passages").select("*").order("created_at",{ascending:false}),
+    sb.from("keywords").select("*").order("name"),
+    sb.from("passage_keywords").select("*")
+  ]);
+  if(passageResult.error) throw passageResult.error;
+  if(keywordResult.error) throw keywordResult.error;
+  if(linkResult.error) throw linkResult.error;
+  passages=passageResult.data||[];
+  keywords=keywordResult.data||[];
+  links=linkResult.data||[];
+  render();
+}
+
+function render(){
+  renderFilters();
+  renderDashboard();
+  renderTypeChoices();
+  renderKeywordChips();
+  renderBrowse();
+  renderKeywordPage();
+  renderInsights();
+  readiness();
+}
+
+function renderFilters(){
+  const current=$("kwFilter").value;
+  $("kwFilter").innerHTML=`<option value="">All keywords</option>${keywords.map(keyword=>`<option value="${keyword.id}">${esc(keyword.name)}</option>`).join("")}`;
+  if([...$("kwFilter").options].some(option=>option.value===current)) $("kwFilter").value=current;
+}
+
+function bars(items){
+  if(!items.length) return `<span class="muted">No data yet.</span>`;
+  const max=Math.max(...items.map(item=>item.count),1);
+  return `<div class="bars">${items.map(item=>`<div><div class="bartop"><b>${esc(item.name)}</b><span>${item.count}</span></div><div class="track"><div class="fill" style="width:${Math.max(6,item.count/max*100)}%"></div></div></div>`).join("")}</div>`;
+}
+
+function renderDashboard(){
+  const counts=usage();
+  const top=keywords.map(keyword=>({...keyword,count:counts[keyword.id]||0})).sort((a,b)=>b.count-a.count)[0];
+  $("sPassages").textContent=passages.length;
+  $("sThemes").textContent=new Set(links.map(link=>link.keyword_id)).size;
+  $("sBooks").textContent=new Set(passages.map(passage=>passage.book)).size;
+  $("sTop").textContent=top?.count?top.name:"—";
+  $("sTopNote").textContent=top?.count?`${top.count} passage${top.count===1?"":"s"}`:"No entries yet";
+  $("recent").innerHTML=passages.length?passages.slice(0,5).map(passage=>`<div style="padding:11px;border:1px solid var(--l);border-radius:11px;margin-bottom:8px"><div class="row" style="align-items:center">${classificationTags(passage)}<b style="color:var(--n)">${esc(passage.reference)}</b></div><div class="muted" style="font-size:12px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(passage.comment)}</div></div>`).join(""):empty("Your library is ready","Add your first passage.");
+  $("dashBars").innerHTML=bars(keywords.map(keyword=>({name:keyword.name,count:counts[keyword.id]||0})).filter(item=>item.count).sort((a,b)=>b.count-a.count).slice(0,7));
+}
+
+async function loadSlogan(){
+  if(sloganLoaded||!session) return;
+  sloganLoaded=true;
+  try{
+    const response=await fetch("/api/verse?passageId=1JN.2.6-1JN.2.6",{cache:"no-store"});
+    const data=await response.json();
+    if(!response.ok) throw new Error(data.error||"Could not load 1 John 2:6.");
+    $("sloganText").textContent=cleanText(data.content);
+    $("sloganRef").textContent=`${data.reference||"1 John 2:6"} (NIV)`;
+    if(data.fumsToken) window.fums?.("trackView",data.fumsToken);
+  }catch(error){
+    $("sloganText").textContent="1 John 2:6";
+    $("sloganRef").textContent="The verse could not be loaded right now.";
+    sloganLoaded=false;
+  }
+}
+
+function parseRange(value){
+  const match=value.trim().replace(/[–—]/g,"-").match(/^(\d+)(?:\s*-\s*(\d+))?$/);
+  if(!match) return null;
+  const start=Number(match[1]);
+  const end=Number(match[2]||match[1]);
+  return start>0&&end>=start?{start,end}:null;
+}
+
+function selection(showError=true){
+  const book=BOOKS.find(item=>item.name===$("book").value);
+  const chapter=Number($("chapter").value);
+  const range=parseRange($("verse").value);
+  if(!book||!Number.isInteger(chapter)||chapter<1||!range){
+    if(showError) toast("Choose a valid book, chapter, and verse.");
+    return null;
+  }
+  return {book,chapter,start:range.start,end:range.end,id:`${book.code}.${chapter}.${range.start}-${book.code}.${chapter}.${range.end}`};
+}
+
+function scheduleVerseLoad(){
+  currentPassage=null;
+  $("verseBox").classList.add("hide");
+  $("dupe").classList.add("hide");
+  exactDuplicateBlocked=false;
+  allowExactDuplicate=false;
+  clearTimeout(verseTimer);
+  verseTimer=setTimeout(()=>{if(selection(false)) loadVerse()},700);
+  readiness();
+}
+
+function cleanText(value){
+  return String(value||"").replace(/\s+/g," ").replace(/\s([,.;:!?])/g,"$1").trim();
+}
+
+async function loadVerse(){
+  const selected=selection();
+  if(!selected) return;
+  busy($("loadVerse"),true,"Loading…");
+  $("verseStatus").textContent="Retrieving NIV passage…";
+  try{
+    const response=await fetch(`/api/verse?passageId=${encodeURIComponent(selected.id)}`,{cache:"no-store"});
+    const data=await response.json();
+    if(!response.ok) throw new Error(data.error||"The passage could not be loaded.");
+    currentPassage={...selected,...data};
+    $("verseRef").textContent=data.reference;
+    $("verseText").textContent=cleanText(data.content);
+    $("verseCopy").textContent=data.copyright||"";
+    $("verseBox").classList.remove("hide");
+    $("verseStatus").textContent="NIV passage loaded. Confirm it below.";
+    if(data.fumsToken) window.fums?.("trackView",data.fumsToken);
+    renderDuplicates(selected);
+  }catch(error){
+    currentPassage=null;
+    $("verseStatus").textContent=error.message;
+    toast(error.message);
+  }finally{
+    busy($("loadVerse"),false);
+    readiness();
+  }
+}
+
+function rangeKey(bookOrder,chapter,verse){
+  return Number(bookOrder)*1000000+Number(chapter)*1000+Number(verse);
+}
+
+function renderDuplicates(selected){
+  const start=rangeKey(selected.book.order,selected.chapter,selected.start);
+  const end=rangeKey(selected.book.order,selected.chapter,selected.end);
+  const editId=$("editId").value;
+  const matches=passages.filter(passage=>passage.id!==editId&&Number(passage.book_order)===selected.book.order&&Number(passage.start_key)<=end&&Number(passage.end_key)>=start).map(passage=>({...passage,kind:Number(passage.start_key)===start&&Number(passage.end_key)===end?"exact":"overlap"}));
+  exactDuplicateBlocked=matches.some(match=>match.kind==="exact");
+  allowExactDuplicate=false;
+  const box=$("dupe");
+  if(!matches.length){
+    box.classList.add("hide");
+    readiness();
+    return;
+  }
+  box.className=`warn ${exactDuplicateBlocked?"exact":""}`;
+  box.innerHTML=`<b>${exactDuplicateBlocked?"You already added this exact passage.":"This overlaps an earlier passage."}</b>${matches.map(match=>`<div style="margin-top:8px"><strong>${esc(match.reference)}</strong><div style="font-size:12px;margin-top:3px">${esc(match.comment||"")}</div></div>`).join("")}${exactDuplicateBlocked?`<label style="display:flex;gap:8px;align-items:flex-start;margin-top:11px"><input id="allowDupe" type="checkbox"> Save another separate comment for this exact passage anyway</label>`:""}`;
+  box.classList.remove("hide");
+  $("allowDupe")?.addEventListener("change",event=>{
+    allowExactDuplicate=event.target.checked;
+    exactDuplicateBlocked=!allowExactDuplicate;
+    readiness();
+  });
+  readiness();
+}
+
+function toggleType(type){
+  if(selectedTypes.has(type)) selectedTypes.delete(type); else selectedTypes.add(type);
+  renderTypeChoices();
+  readiness();
+}
+
+function renderTypeChoices(){
+  const mapping=[["typeDo","Do"],["typeDont","Don't"]];
+  mapping.forEach(([id,type])=>{
+    const button=$(id);
+    const on=selectedTypes.has(type);
+    button.classList.toggle("on",on);
+    button.setAttribute("aria-pressed",String(on));
+  });
+}
+
+function renderKeywordChips(){
+  const query=$("kwSearch").value.toLowerCase();
+  const list=keywords.filter(keyword=>!query||`${keyword.name} ${keyword.category}`.toLowerCase().includes(query));
+  $("kwChips").innerHTML=list.map(keyword=>`<button type="button" class="chip ${selectedKeywords.has(keyword.id)?"on":""}" data-keyword="${keyword.id}">${esc(keyword.name)}</button>`).join("");
+  document.querySelectorAll("[data-keyword]").forEach(button=>button.onclick=()=>{
+    const id=button.dataset.keyword;
+    if(selectedKeywords.has(id)) selectedKeywords.delete(id); else selectedKeywords.add(id);
+    renderKeywordChips();
+    readiness();
+  });
+}
+
+async function addKeyword(name,category){
+  const clean=name.trim();
+  if(!clean) throw new Error("Enter a keyword name.");
+  const existing=keywords.find(keyword=>keyword.name.toLowerCase()===clean.toLowerCase());
+  if(existing) return existing;
+  const result=await sb.from("keywords").insert({name:clean,category}).select().single();
+  if(result.error) throw result.error;
+  keywords.push(result.data);
+  keywords.sort((a,b)=>a.name.localeCompare(b.name));
+  return result.data;
+}
+
+async function addKeywordFromForm(){
+  busy($("addKw"),true,"Adding…");
+  try{
+    const keyword=await addKeyword($("newKw").value,$("newCat").value);
+    selectedKeywords.add(keyword.id);
+    $("newKw").value="";
+    $("kwSearch").value="";
+    render();
+    toast("Keyword added and selected.");
+  }catch(error){toast(error.message)}finally{busy($("addKw"),false)}
+}
+
+async function addKeywordFromPage(){
+  busy($("creatorSave"),true,"Saving…");
+  try{
+    await addKeyword($("creatorName").value,$("creatorCat").value);
+    $("creatorName").value="";
+    $("creator").classList.add("hide");
+    render();
+  }catch(error){toast(error.message)}finally{busy($("creatorSave"),false)}
+}
+
+function readiness(){
+  const ready=Boolean(currentPassage)&&selectedTypes.size>0&&selectedKeywords.size>0&&$("comment").value.trim().length>0&&!exactDuplicateBlocked&&!isSaving;
+  $("save").disabled=!ready;
+  $("ready").textContent=!currentPassage?"Load a valid passage before saving.":selectedTypes.size===0?"Choose Do, Don’t, or both.":exactDuplicateBlocked?"Confirm the exact duplicate first.":selectedKeywords.size===0?"Select at least one keyword.":!$("comment").value.trim()?"Write your comment.":isSaving?"Saving securely…":"Ready to save.";
+}
+
+function payloadFingerprint(payload,keywordIds,types){
+  return JSON.stringify({payload,keywordIds:[...keywordIds].sort(),types:[...types].sort()});
+}
+
+async function savePassage(event){
+  event.preventDefault();
+  if(isSaving||$("save").disabled||!currentPassage) return;
+
+  const editId=$("editId").value||null;
+  const payload={
+    book:currentPassage.book.name,
+    book_order:currentPassage.book.order,
+    start_chapter:currentPassage.chapter,
+    start_verse:currentPassage.start,
+    end_chapter:currentPassage.chapter,
+    end_verse:currentPassage.end,
+    reference:currentPassage.reference,
+    bible_id:currentPassage.bibleId,
+    api_passage_id:currentPassage.id,
+    translation:"NIV",
+    comment:$("comment").value.trim(),
+    is_favorite:$("fav").checked
+  };
+  const fingerprint=payloadFingerprint(payload,selectedKeywords,selectedTypes);
+  if(fingerprint!==lastAttemptFingerprint){
+    requestId=makeRequestId();
+    lastAttemptFingerprint=fingerprint;
+  }
+
+  isSaving=true;
+  $("passageForm").classList.add("save-lock");
+  busy($("save"),true,editId?"Updating…":"Saving…");
+  readiness();
+
+  try{
+    const result=await sb.rpc("save_passage_with_keywords",{
+      p_passage_id:editId,
+      p_client_request_id:requestId,
+      p_book:payload.book,
+      p_book_order:payload.book_order,
+      p_start_chapter:payload.start_chapter,
+      p_start_verse:payload.start_verse,
+      p_end_chapter:payload.end_chapter,
+      p_end_verse:payload.end_verse,
+      p_reference:payload.reference,
+      p_bible_id:payload.bible_id,
+      p_api_passage_id:payload.api_passage_id,
+      p_translation:payload.translation,
+      p_comment:payload.comment,
+      p_is_favorite:payload.is_favorite,
+      p_classifications:[...selectedTypes],
+      p_keyword_ids:[...selectedKeywords],
+      p_allow_exact_duplicate:allowExactDuplicate
+    });
+    if(result.error) throw result.error;
+
+    const message=editId?"Passage updated.":"Passage saved.";
+    try{
+      await load();
+      clearForm();
+      page("browse");
+      toast(message);
+    }catch(refreshError){
+      clearForm();
+      page("browse");
+      toast(`${message} The list could not refresh automatically; refresh the page once.`);
+    }
+  }catch(error){
+    if(String(error.message||"").includes("EXACT_DUPLICATE")){
+      exactDuplicateBlocked=true;
+      allowExactDuplicate=false;
+      toast("That exact passage already exists. Confirm the duplicate option if you truly want another entry.");
+      const selected=selection(false);
+      if(selected) renderDuplicates(selected);
+    }else{
+      toast(`Save failed: ${error.message}`);
+    }
+  }finally{
+    isSaving=false;
+    $("passageForm").classList.remove("save-lock");
+    busy($("save"),false);
+    readiness();
+  }
+}
+
+function clearForm(){
+  $("passageForm").reset();
+  $("editId").value="";
+  $("formTitle").textContent="Add a Passage";
+  $("save").textContent="Save passage";
+  $("cancelEdit").classList.add("hide");
+  $("verseBox").classList.add("hide");
+  $("dupe").classList.add("hide");
+  $("verseStatus").textContent="Select a New Testament passage.";
+  currentPassage=null;
+  selectedKeywords=new Set();
+  selectedTypes=new Set();
+  exactDuplicateBlocked=false;
+  allowExactDuplicate=false;
+  requestId=makeRequestId();
+  lastAttemptFingerprint="";
+  renderTypeChoices();
+  renderKeywordChips();
+  readiness();
+}
+
+async function editPassage(id){
+  const passage=passages.find(item=>item.id===id);
+  if(!passage) return;
+  page("add");
+  $("editId").value=id;
+  $("formTitle").textContent="Edit Passage";
+  $("save").textContent="Update passage";
+  $("cancelEdit").classList.remove("hide");
+  $("book").value=passage.book;
+  $("chapter").value=passage.start_chapter;
+  $("verse").value=passage.start_verse===passage.end_verse?passage.start_verse:`${passage.start_verse}-${passage.end_verse}`;
+  $("comment").value=passage.comment;
+  $("fav").checked=passage.is_favorite;
+  selectedKeywords=new Set(keywordLinksFor(id).map(link=>link.keyword_id));
+  selectedTypes=new Set(classificationsFor(passage));
+  requestId=makeRequestId();
+  lastAttemptFingerprint="";
+  renderTypeChoices();
+  renderKeywordChips();
+  await loadVerse();
+}
+
+async function deletePassage(id){
+  const passage=passages.find(item=>item.id===id);
+  if(!passage||!confirm(`Delete ${passage.reference}?`)) return;
+  const result=await sb.from("passages").delete().eq("id",id);
+  if(result.error) return toast(result.error.message);
+  await load();
+  toast("Passage deleted.");
+}
+
+async function toggleFavourite(id){
+  const passage=passages.find(item=>item.id===id);
+  const result=await sb.from("passages").update({is_favorite:!passage.is_favorite}).eq("id",id);
+  if(result.error) return toast(result.error.message);
+  passage.is_favorite=!passage.is_favorite;
+  render();
+}
+
+function renderBrowse(){
+  const query=$("search").value.toLowerCase();
+  const book=$("bookFilter").value;
+  const type=$("typeFilter").value;
+  const keyword=$("kwFilter").value;
+  const favourites=$("favFilter").checked;
+  const list=passages.filter(passage=>{
+    const names=keywordsFor(passage.id).map(item=>item.name);
+    const types=classificationsFor(passage);
+    const typeMatch=!type||(type==="Unclassified"?types.length===0:types.includes(type));
+    return (!query||`${passage.reference} ${passage.comment} ${names.join(" ")} ${types.join(" ")}`.toLowerCase().includes(query))&&(!book||passage.book===book)&&typeMatch&&(!keyword||links.some(link=>link.passage_id===passage.id&&link.keyword_id===keyword))&&(!favourites||passage.is_favorite);
+  });
+  $("browseCount").textContent=`${list.length} of ${passages.length} passages shown`;
+  $("passageGrid").innerHTML=list.length?list.map(passage=>`<article class="card passage"><div class="ptop"><div><h3>${esc(passage.reference)}</h3><small class="muted">NIV</small></div><button class="star ${passage.is_favorite?"on":""}" data-favourite="${passage.id}">${passage.is_favorite?"★":"☆"}</button></div><div class="tags">${classificationTags(passage)}</div><p class="comment">${esc(passage.comment)}</p><div class="tags">${keywordsFor(passage.id).map(keyword=>`<span class="tag">${esc(keyword.name)}</span>`).join("")}</div><div class="foot"><small class="muted">${formatDate(passage.created_at)}</small><div class="row"><button class="btn secondary small" data-view="${passage.id}">View</button><button class="btn secondary small" data-edit="${passage.id}">Edit</button><button class="btn secondary small" data-delete="${passage.id}">Delete</button></div></div></article>`).join(""):empty("No passages found",passages.length?"Try another filter.":"Add your first passage.");
+  document.querySelectorAll("[data-view]").forEach(button=>button.onclick=()=>viewPassage(button.dataset.view));
+  document.querySelectorAll("[data-edit]").forEach(button=>button.onclick=()=>editPassage(button.dataset.edit));
+  document.querySelectorAll("[data-delete]").forEach(button=>button.onclick=()=>deletePassage(button.dataset.delete));
+  document.querySelectorAll("[data-favourite]").forEach(button=>button.onclick=()=>toggleFavourite(button.dataset.favourite));
+}
+
+async function viewPassage(id){
+  const passage=passages.find(item=>item.id===id);
+  $("mRef").textContent=passage.reference;
+  $("mComment").textContent=passage.comment;
+  $("mTags").innerHTML=`${classificationTags(passage)}${keywordsFor(id).map(keyword=>`<span class="tag">${esc(keyword.name)}</span>`).join("")}`;
+  $("mLoading").classList.remove("hide");
+  $("mLoading").textContent="Loading NIV passage…";
+  $("mText").classList.add("hide");
+  $("mCopy").textContent="";
+  $("modal").classList.remove("hide");
+  try{
+    const response=await fetch(`/api/verse?passageId=${encodeURIComponent(passage.api_passage_id)}`,{cache:"no-store"});
+    const data=await response.json();
+    if(!response.ok) throw new Error(data.error);
+    $("mRef").textContent=data.reference;
+    $("mText").textContent=cleanText(data.content);
+    $("mCopy").textContent=data.copyright||"";
+    $("mLoading").classList.add("hide");
+    $("mText").classList.remove("hide");
+    if(data.fumsToken) window.fums?.("trackView",data.fumsToken);
+  }catch(error){
+    $("mLoading").textContent=error.message;
+  }
+}
+
+function renderKeywordPage(){
+  const counts=usage();
+  const query=$("kwPageSearch").value.toLowerCase();
+  const category=$("catFilter").value;
+  const list=keywords.filter(keyword=>(!query||keyword.name.toLowerCase().includes(query))&&(!category||keyword.category===category)).sort((a,b)=>(counts[b.id]||0)-(counts[a.id]||0)||a.name.localeCompare(b.name));
+  $("kwGrid").innerHTML=list.map(keyword=>`<div class="card kwcard"><div class="kwtop"><div><h3 style="margin:0;color:var(--n)">${esc(keyword.name)}</h3><small class="muted">${esc(keyword.category)}</small></div><div class="count">${counts[keyword.id]||0}</div></div><div class="row" style="margin-top:13px"><button class="btn secondary small" data-keyword-view="${keyword.id}">View passages</button><button class="btn secondary small" data-keyword-delete="${keyword.id}" ${(counts[keyword.id]||0)?"disabled":""}>Delete</button></div></div>`).join("");
+  document.querySelectorAll("[data-keyword-view]").forEach(button=>button.onclick=()=>{$("kwFilter").value=button.dataset.keywordView;page("browse")});
+  document.querySelectorAll("[data-keyword-delete]").forEach(button=>button.onclick=()=>deleteKeyword(button.dataset.keywordDelete));
+}
+
+async function deleteKeyword(id){
+  if(usage()[id]) return toast("This keyword is still used.");
+  const keyword=keywords.find(item=>item.id===id);
+  if(!confirm(`Delete ${keyword.name}?`)) return;
+  const result=await sb.from("keywords").delete().eq("id",id);
+  if(result.error) return toast(result.error.message);
+  await load();
+}
+
+function renderInsights(){
+  const counts=usage();
+  const books={};
+  const categories={};
+  passages.forEach(passage=>books[passage.book]=(books[passage.book]||0)+1);
+  links.forEach(link=>{
+    const keyword=keywords.find(item=>item.id===link.keyword_id);
+    if(keyword) categories[keyword.category]=(categories[keyword.category]||0)+1;
+  });
+  $("iKw").innerHTML=bars(keywords.map(keyword=>({name:keyword.name,count:counts[keyword.id]||0})).filter(item=>item.count).sort((a,b)=>b.count-a.count).slice(0,10));
+  $("iBooks").innerHTML=bars(Object.entries(books).map(([name,count])=>({name,count})).sort((a,b)=>b.count-a.count));
+  $("iCats").innerHTML=bars(Object.entries(categories).map(([name,count])=>({name,count})).sort((a,b)=>b.count-a.count));
+  $("snapshot").innerHTML=`<div class="stats" style="grid-template-columns:1fr 1fr;margin:0"><div class="card stat"><span>Passages</span><strong>${passages.length}</strong></div><div class="card stat"><span>Favourites</span><strong>${passages.filter(passage=>passage.is_favorite).length}</strong></div><div class="card stat"><span>Do entries</span><strong>${passages.filter(passage=>classificationsFor(passage).includes("Do")).length}</strong></div><div class="card stat"><span>Don’t entries</span><strong>${passages.filter(passage=>classificationsFor(passage).includes("Don't")).length}</strong></div></div>`;
+}
+
+function backup(){
+  return {app:"Walk Worthy",version:2.1,exported_at:new Date().toISOString(),passages:passages.map(({user_id,start_key,end_key,...rest})=>rest),keywords:keywords.map(({user_id,...rest})=>rest),passage_keywords:links.map(({user_id,...rest})=>rest)};
+}
+function download(name,text,type){
+  const anchor=document.createElement("a");
+  const url=URL.createObjectURL(new Blob([text],{type}));
+  anchor.href=url;
+  anchor.download=name;
+  anchor.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function exportJSON(){
+  download(`walk-worthy-backup-${new Date().toISOString().slice(0,10)}.json`,JSON.stringify(backup(),null,2),"application/json");
+}
+function csvCell(value){return `"${String(value??"").replace(/"/g,'""')}"`}
+function exportCSV(){
+  const rows=[["Reference","Book","Chapter","Verse Range","Do / Don't","Comment","Keywords","Favourite","Created"],...passages.map(passage=>[passage.reference,passage.book,passage.start_chapter,passage.start_verse===passage.end_verse?passage.start_verse:`${passage.start_verse}-${passage.end_verse}`,classificationsFor(passage).join("; "),passage.comment,keywordsFor(passage.id).map(keyword=>keyword.name).join("; "),passage.is_favorite?"Yes":"No",passage.created_at])];
+  download(`walk-worthy-passages-${new Date().toISOString().slice(0,10)}.csv`,"\uFEFF"+rows.map(row=>row.map(csvCell).join(",")).join("\n"),"text/csv");
+}
+
+async function restore(event){
+  const file=event.target.files[0];
+  event.target.value="";
+  if(!file) return;
+  try{
+    const data=JSON.parse(await file.text());
+    if(data.app!=="Walk Worthy"||!Array.isArray(data.passages)||!Array.isArray(data.keywords)||!Array.isArray(data.passage_keywords)) throw new Error("Invalid Walk Worthy backup.");
+    if(!confirm("Replace all current data with this backup?")) return;
+    $("loading").classList.remove("hide");
+    let result=await sb.from("passage_keywords").delete().neq("passage_id","00000000-0000-0000-0000-000000000000");
+    if(result.error) throw result.error;
+    result=await sb.from("passages").delete().neq("id","00000000-0000-0000-0000-000000000000");
+    if(result.error) throw result.error;
+    result=await sb.from("keywords").delete().neq("id","00000000-0000-0000-0000-000000000000");
+    if(result.error) throw result.error;
+    if(data.keywords.length){result=await sb.from("keywords").insert(data.keywords.map(({user_id,...rest})=>rest));if(result.error) throw result.error}
+    if(data.passages.length){result=await sb.from("passages").insert(data.passages.map(({user_id,start_key,end_key,...rest})=>rest));if(result.error) throw result.error}
+    if(data.passage_keywords.length){result=await sb.from("passage_keywords").insert(data.passage_keywords.map(({user_id,...rest})=>rest));if(result.error) throw result.error}
+    await load();
+    page("dashboard");
+    toast("Backup restored.");
+  }catch(error){
+    toast(error.message);
+  }finally{
+    $("loading").classList.add("hide");
+  }
+}
+
 init();
 </script>
 </body></html>
