@@ -1,0 +1,25 @@
+WALK WORTHY — NEXT STEPS
+
+1. Download and unzip Walk_Worthy_Cloud_v2.zip.
+2. On GitHub create a NEW PRIVATE repository named: walk-worthy
+3. Upload:
+   - index.html
+   - package.json
+   - vercel.json
+   - README.md
+   - api/config.js
+   - api/verse.js
+4. Commit the files.
+5. In Vercel click Add New → Project.
+6. Import the walk-worthy repository.
+7. Framework preset: Other.
+8. Add environment variables:
+   SUPABASE_URL
+   SUPABASE_PUBLISHABLE_KEY
+   API_BIBLE_KEY
+9. Deploy.
+10. Copy the Vercel website address.
+11. In Supabase Authentication → URL Configuration:
+    - Site URL = your Vercel address
+    - Redirect URL = your Vercel address
+12. Create your Walk Worthy account and confirm your email.
