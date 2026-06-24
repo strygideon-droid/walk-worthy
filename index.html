@@ -1,854 +1,258 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#10243f">
-<title>Walk Worthy</title>
-<style>
-:root{--n:#10243f;--n2:#24517d;--g:#d5aa52;--bg:#f3f5f7;--p:#fff;--t:#172033;--m:#697386;--l:#dfe5ed;--r:16px}
-*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;color:var(--t);background:linear-gradient(180deg,#f8f4ec,var(--bg));min-height:100vh}
-button,input,select,textarea{font:inherit}.hide{display:none!important}.muted{color:var(--m)}.btn{border:1px solid transparent;border-radius:11px;padding:10px 14px;font-weight:800;cursor:pointer}.btn:disabled{opacity:.45;cursor:not-allowed}.primary{background:var(--n);color:white}.gold{background:linear-gradient(135deg,var(--g),#ead083);color:var(--n)}.secondary{background:white;border-color:var(--l);color:var(--n)}.small{padding:7px 9px;font-size:12px}
-#loading,#auth{position:fixed;inset:0;z-index:99;display:grid;place-items:center;padding:20px;background:var(--n);color:white}.loadmark,.brandmark{display:grid;place-items:center;background:linear-gradient(145deg,var(--g),#efd58e);color:var(--n);font-family:Georgia,serif;font-weight:900}.loadmark{width:72px;height:72px;border-radius:22px;font-size:38px;margin:auto}.authcard{width:min(510px,100%);background:#fffdf9;color:var(--t);border-radius:24px;padding:28px;box-shadow:0 30px 80px #0006}.brand{display:flex;gap:12px;align-items:center}.brandmark{width:48px;height:48px;border-radius:14px;font-size:26px}.brand h1{font:700 24px Georgia;margin:0;color:var(--n)}.brand p{margin:2px 0 0;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--m)}.authcopy{margin:25px 0}.authcopy h2{font:700 31px/1.1 Georgia;color:var(--n);margin:7px 0}.authcopy p{color:var(--m);line-height:1.55}.eyebrow{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;font-weight:900;color:var(--n2)}.tabs{display:grid;grid-template-columns:1fr 1fr;background:#edf1f5;border-radius:12px;padding:4px;margin-bottom:16px}.tab{border:0;background:transparent;padding:10px;border-radius:9px;font-weight:800;color:var(--m)}.tab.on{background:white;color:var(--n);box-shadow:0 4px 12px #10243f18}label{display:block;font-size:13px;font-weight:800;margin:10px 0 6px}.input,select,textarea{width:100%;border:1px solid #ccd5e0;border-radius:11px;padding:11px 12px;background:white;outline:none}.input:focus,select:focus,textarea:focus{border-color:var(--n2);box-shadow:0 0 0 3px #24517d18}.msg{margin-top:12px;padding:11px;border-radius:10px;font-size:13px}.err{background:#fff0f0;color:#883b3b}.ok{background:#edf7f3;color:#285d4f}
-.shell{display:grid;grid-template-columns:260px 1fr;min-height:100vh}.side{position:sticky;top:0;height:100vh;background:var(--n);color:white;padding:24px 18px;display:flex;flex-direction:column;gap:22px}.side .brand h1{color:white}.side .brand p{color:#ffffff99}.nav{display:grid;gap:7px}.nav button{border:0;background:transparent;color:#ffffffbb;padding:12px;border-radius:11px;text-align:left;font-weight:800}.nav button.on,.nav button:hover{background:#ffffff12;color:white}.account{margin-top:auto;background:#ffffff10;padding:14px;border-radius:13px;font-size:12px}.main{padding:32px clamp(18px,4vw,52px) 60px}.mobile{display:none}.page{display:none}.page.on{display:block}.hero{background:linear-gradient(135deg,var(--n),var(--n2));color:white;border-radius:22px;padding:38px;box-shadow:0 15px 35px #10243f22}.hero h2,.pagehead h2{font-family:Georgia,serif}.hero h2{font-size:40px;margin:10px 0}.hero p{color:#ffffffc0;max-width:650px;line-height:1.55}.row{display:flex;gap:9px;flex-wrap:wrap}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin:18px 0}.card,.panel,.form{background:#fffffff2;border:1px solid var(--l);border-radius:var(--r);box-shadow:0 8px 22px #10243f0d}.stat{padding:18px}.stat span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.9px;color:var(--m);font-weight:900}.stat strong{display:block;font:700 32px Georgia;color:var(--n);margin:8px 0 4px}.two{display:grid;grid-template-columns:1.2fr .8fr;gap:17px}.panel{padding:20px}.panelhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.panel h3{font:700 21px Georgia;color:var(--n);margin:0}.pagehead{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:20px}.pagehead h2{font-size:40px;color:var(--n);margin:6px 0}.pagehead p{color:var(--m);margin:0}.step{padding:23px;border-bottom:1px solid var(--l)}.stephead{display:flex;gap:10px;margin-bottom:16px}.stepno{width:30px;height:30px;border-radius:9px;background:var(--n);color:white;display:grid;place-items:center;font-weight:900}.stephead h3{margin:0;color:var(--n)}.stephead p{margin:3px 0;color:var(--m);font-size:12px}.refgrid{display:grid;grid-template-columns:1.4fr .7fr 1fr auto;gap:10px;align-items:end}.versebox{margin-top:14px;padding:18px;border-radius:14px;background:#fbf5e6;border:1px solid #ead9aa}.versebox h3{font:700 22px Georgia;color:var(--n);margin:5px 0 12px}.scripture{font:17px/1.7 Georgia;white-space:pre-wrap}.copy{font-size:10px;color:var(--m);margin-top:10px}.badge{display:inline-flex;background:var(--n);color:white;padding:4px 7px;border-radius:6px;font-size:9px;font-weight:900}.warn{margin-top:14px;padding:14px;border-radius:13px;background:#fff7e5;border:1px solid #ebd39b;color:#73541d}.warn.exact{background:#fff0f0;border-color:#edc0c0;color:#823838}.kwlayout{display:grid;grid-template-columns:1fr 270px;gap:15px}.chips{display:flex;flex-wrap:wrap;gap:7px;max-height:220px;overflow:auto;padding-top:10px}.chip{border:1px solid #d6dee8;background:white;border-radius:999px;padding:7px 10px;font-size:12px;cursor:pointer}.chip.on{background:var(--n);color:white;border-color:var(--n)}.newkw{background:#f3f6f9;border-radius:13px;padding:14px}.actions{padding:18px 23px;display:flex;justify-content:space-between;align-items:center}.filters{display:grid;grid-template-columns:1.5fr .7fr .7fr auto;gap:9px;background:#ffffffdd;border:1px solid var(--l);padding:13px;border-radius:14px;margin-bottom:12px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:14px}.passage{padding:17px;display:flex;flex-direction:column;gap:11px;min-height:225px}.ptop{display:flex;justify-content:space-between}.ptop h3{font:700 21px Georgia;color:var(--n);margin:0}.star{border:0;background:transparent;font-size:21px;color:#aab3c0}.star.on{color:#d2a13d}.comment{font-size:13px;line-height:1.55;flex:1}.tags{display:flex;gap:5px;flex-wrap:wrap}.tag{background:#edf2f7;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:800;color:#405069}.foot{display:flex;justify-content:space-between;border-top:1px solid #edf0f4;padding-top:10px}.kwtoolbar{display:grid;grid-template-columns:1fr .5fr auto;gap:9px;margin-bottom:14px}.kwcard{padding:16px}.kwtop{display:flex;justify-content:space-between}.count{width:34px;height:34px;display:grid;place-items:center;border-radius:9px;background:#f3e5bf;color:#72541a;font-weight:900}.bars{display:grid;gap:10px}.bartop{display:flex;justify-content:space-between;font-size:12px}.track{height:8px;background:#e8edf2;border-radius:99px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,var(--n2),var(--g))}.backup{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.backup .panel{display:flex;flex-direction:column}.backup p{color:var(--m);font-size:13px;line-height:1.5;flex:1}.empty{text-align:center;padding:35px;border:1px dashed #cbd4df;border-radius:14px;color:var(--m)}.modal{position:fixed;inset:0;z-index:88;background:#08111faa;display:grid;place-items:center;padding:20px}.modalcard{width:min(700px,100%);max-height:88vh;overflow:auto;background:#fffdf9;border-radius:19px;padding:22px}.toast{position:fixed;right:20px;bottom:20px;z-index:120;background:var(--n);color:white;padding:12px 15px;border-radius:11px;opacity:0;transform:translateY(80px);transition:.2s}.toast.show{opacity:1;transform:none}
-@media(max-width:950px){.stats{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}.backup{grid-template-columns:1fr 1fr}.filters{grid-template-columns:1fr 1fr}}
-@media(max-width:780px){.shell{display:block}.side{position:fixed;left:0;transform:translateX(-110%);transition:.2s;width:260px;z-index:50}.side.open{transform:none}.mobile{display:flex;position:sticky;top:0;z-index:40;background:var(--n);color:white;padding:11px 14px;justify-content:space-between}.main{padding:22px 14px 50px}.refgrid{grid-template-columns:1fr 1fr}.refgrid .wide{grid-column:span 2}.kwlayout,.kwtoolbar,.filters{grid-template-columns:1fr}.backup{grid-template-columns:1fr}}
-@media(max-width:500px){.authcard{padding:21px}.hero{padding:25px 20px}.hero h2{font-size:31px}.stats{gap:8px}.stat{padding:14px}.step{padding:19px 14px}.refgrid{grid-template-columns:1fr}.refgrid .wide{grid-column:auto}.actions{padding:17px 14px;flex-direction:column;align-items:stretch}.grid{grid-template-columns:1fr}}
-
-.slogan{margin:20px 0 22px;padding:17px 19px;border-left:4px solid var(--g);border-radius:0 14px 14px 0;background:#ffffff12;max-width:760px;position:relative;z-index:1}.slogan-label{text-transform:uppercase;letter-spacing:1px;font-size:9px;font-weight:900;color:#efd58e}.slogan blockquote{font:italic 19px/1.55 Georgia;margin:7px 0 5px;color:white}.slogan cite{font-style:normal;font-size:11px;color:#ffffffa8}.type-choices{display:grid;grid-template-columns:1fr 1fr;gap:12px}.type-choice{border:1px solid #cfd8e4;background:white;border-radius:14px;padding:16px;text-align:left;color:var(--t);cursor:pointer;transition:.16s}.type-choice:hover{border-color:var(--n2);transform:translateY(-1px)}.type-choice strong{display:block;font:700 22px Georgia;color:var(--n);margin-bottom:4px}.type-choice span{display:block;color:var(--m);font-size:12px;line-height:1.4}.type-choice.on{background:var(--n);border-color:var(--n);box-shadow:0 9px 20px #10243f20}.type-choice.on strong,.type-choice.on span{color:white}.tag.do{background:#e4f4ed;color:#23624f}.tag.dont{background:#fae8e8;color:#8a3c3c}.save-lock{pointer-events:none;opacity:.75}.filters{grid-template-columns:1.5fr .65fr .65fr .65fr auto}
-@media(max-width:780px){.type-choices{grid-template-columns:1fr}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#10243f">
+  <meta name="description" content="A private Christian living Bible-study library.">
+  <title>Walk Worthy</title>
+  <link rel="stylesheet" href="/styles.css?v=3.0.0">
 </head>
 <body>
-<div id="loading"><div><div class="loadmark">W</div><p>Opening Walk Worthy…</p></div></div>
+  <section id="loading" class="loading-screen">
+    <div>
+      <div class="loading-mark">W</div>
+      <p>Opening Walk Worthy…</p>
+    </div>
+  </section>
 
-<section id="auth" class="hide">
-<div class="authcard">
-  <div class="brand"><div class="brandmark">W</div><div><h1>Walk Worthy</h1><p>Christian Living Study</p></div></div>
-  <div class="authcopy"><div class="eyebrow">Your private Scripture library</div><h2>Choose. Tag. Comment. Remember.</h2><p>Confirm the NIV passage, connect your keywords, and add one clear observation in your own words.</p></div>
-  <div class="tabs"><button class="tab on" data-mode="signin">Sign in</button><button class="tab" data-mode="signup">Create account</button></div>
-  <form id="authForm">
-    <label>Email</label><input id="email" class="input" type="email" required>
-    <label>Password</label><input id="password" class="input" type="password" minlength="6" required>
-    <button id="authBtn" class="btn gold" style="width:100%;margin-top:14px">Sign in</button>
-  </form>
-  <div id="authMsg" class="msg hide"></div>
-</div>
-</section>
+  <section id="auth" class="auth-screen hide">
+    <div class="auth-card">
+      <div class="brand">
+        <div class="brand-mark">W</div>
+        <div><h1>Walk Worthy</h1><p>Christian Living Study</p></div>
+      </div>
+      <div class="auth-copy">
+        <div class="eyebrow">Your private Scripture library</div>
+        <h2>Record how Christians should live—and find it again.</h2>
+        <p>Choose a passage, confirm the NIV wording, classify it as Do or Don’t, connect keywords, and save.</p>
+      </div>
+      <div class="auth-tabs">
+        <button class="auth-tab on" data-mode="signin">Sign in</button>
+        <button class="auth-tab" data-mode="signup">Create account</button>
+      </div>
+      <form id="authForm">
+        <label for="email">Email address</label>
+        <input id="email" class="input" type="email" autocomplete="email" required>
+        <label for="password">Password</label>
+        <input id="password" class="input" type="password" minlength="6" autocomplete="current-password" required>
+        <button id="authBtn" class="btn gold full" type="submit">Sign in</button>
+      </form>
+      <div id="authMsg" class="message hide"></div>
+    </div>
+  </section>
 
-<div id="shell" class="shell hide">
-<header class="mobile"><button id="menuBtn" class="btn secondary small">☰</button><strong>Walk Worthy</strong><button class="btn secondary small" data-go="add">＋</button></header>
-<aside id="side" class="side">
- <div class="brand"><div class="brandmark">W</div><div><h1>Walk Worthy</h1><p>Christian Living Study</p></div></div>
- <nav class="nav">
-  <button class="on" data-page="dashboard">⌂ Dashboard</button>
-  <button data-page="add">＋ Add Passage</button>
-  <button data-page="browse">⌕ Browse Passages</button>
-  <button data-page="keywords"># Keywords</button>
-  <button data-page="insights">▥ Insights</button>
-  <button data-page="backup">⇩ Backup</button>
- </nav>
- <div class="account"><div class="muted">Signed in as</div><div id="acct" style="margin:4px 0 10px;overflow:hidden;text-overflow:ellipsis"></div><button id="logout" class="btn secondary small">Sign out</button></div>
-</aside>
+  <div id="shell" class="app-shell hide">
+    <header class="mobile-header">
+      <button id="menuBtn" class="icon-btn" aria-label="Open menu">☰</button>
+      <strong>Walk Worthy</strong>
+      <button id="mobileAdd" class="icon-btn" aria-label="Add passage">＋</button>
+    </header>
 
-<main class="main">
-<section id="dashboard" class="page on">
- <div class="hero"><div class="eyebrow" style="color:#efd58e">✦ Personal New Testament Study</div><h2>A growing library of Christian living.</h2><p>Collect passages quickly and see the themes that keep appearing as you read.</p><div id="slogan" class="slogan"><div class="slogan-label">The heart of this study</div><blockquote id="sloganText">Loading 1 John 2:6…</blockquote><cite id="sloganRef">1 John 2:6 (NIV)</cite></div><div class="row"><button class="btn gold" data-go="add">＋ Add a passage</button><button class="btn secondary" data-go="browse">Browse library</button></div></div>
- <div class="stats">
-  <div class="card stat"><span>Passages</span><strong id="sPassages">0</strong><small class="muted">Saved observations</small></div>
-  <div class="card stat"><span>Themes Used</span><strong id="sThemes">0</strong><small class="muted">Connected keywords</small></div>
-  <div class="card stat"><span>Books Referenced</span><strong id="sBooks">0</strong><small class="muted">Out of 27 NT books</small></div>
-  <div class="card stat"><span>Leading Theme</span><strong id="sTop">—</strong><small id="sTopNote" class="muted">No entries yet</small></div>
- </div>
- <div class="two"><div class="panel"><div class="panelhead"><h3>Recent passages</h3><button class="btn secondary small" data-go="browse">View all</button></div><div id="recent"></div></div><div class="panel"><div class="panelhead"><h3>Most recorded themes</h3></div><div id="dashBars"></div></div></div>
-</section>
+    <aside id="side" class="sidebar">
+      <div class="brand sidebar-brand">
+        <div class="brand-mark">W</div>
+        <div><h1>Walk Worthy</h1><p>Christian Living Study</p></div>
+      </div>
+      <nav class="nav">
+        <button class="on" data-page="dashboard"><span>⌂</span>Dashboard</button>
+        <button data-page="add"><span>＋</span>Add Passage</button>
+        <button data-page="browse"><span>⌕</span>Browse Passages</button>
+        <button data-page="keywords"><span>#</span>Keywords</button>
+        <button data-page="creed"><span>✦</span>Jesus Creed</button>
+        <button data-page="insights"><span>▥</span>Insights</button>
+        <button data-page="backup"><span>⇩</span>Backup</button>
+      </nav>
+      <div class="account-box">
+        <div class="account-label">Signed in as</div>
+        <div id="accountEmail" class="account-email"></div>
+        <button id="logout" class="btn ghost small full">Sign out</button>
+      </div>
+    </aside>
 
-<section id="add" class="page">
- <div class="pagehead"><div><div class="eyebrow">Quick study entry</div><h2 id="formTitle">Add a Passage</h2><p>Choose the passage, classify it as a Do or Don't, select keywords, and write one comment.</p></div><button id="clearBtn" class="btn secondary">Clear</button></div>
- <form id="passageForm" class="form">
-  <input id="editId" type="hidden">
-  <div class="step"><div class="stephead"><div class="stepno">1</div><div><h3>Choose the passage</h3><p>The NIV text appears for confirmation.</p></div></div>
-   <div class="refgrid">
-    <div><label>Book</label><select id="book"></select></div>
-    <div><label>Chapter</label><input id="chapter" class="input" type="number" min="1" placeholder="4"></div>
-    <div><label>Verse or range</label><input id="verse" class="input" placeholder="29 or 29–31"></div>
-    <button id="loadVerse" type="button" class="btn primary wide">Load NIV passage</button>
-   </div>
-   <div id="verseStatus" class="muted" style="font-size:12px;margin-top:12px">Select a New Testament passage.</div>
-   <div id="verseBox" class="versebox hide"><span class="badge">NIV</span><h3 id="verseRef"></h3><div id="verseText" class="scripture"></div><div id="verseCopy" class="copy"></div></div>
-   <div id="dupe" class="warn hide"></div>
+    <main class="main">
+      <section id="dashboard" class="page on">
+        <div class="hero">
+          <div class="hero-kicker">✦ Personal New Testament Study</div>
+          <h2>A growing library of Christian living.</h2>
+          <p>Collect passages and see the habits, warnings, and virtues that keep appearing as you read.</p>
+          <div class="slogan">
+            <div class="slogan-label">The heart of this study</div>
+            <blockquote id="sloganText">“Whoever claims to live in him must live as Jesus did.”</blockquote>
+            <cite>1 John 2:6 · NIV</cite>
+          </div>
+          <div class="hero-actions">
+            <button class="btn gold" data-go="add">＋ Add a passage</button>
+            <button class="btn light" data-go="browse">Browse library</button>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card"><span>Passages</span><strong id="statPassages">0</strong><small>Saved entries</small></div>
+          <div class="stat-card"><span>Keywords Used</span><strong id="statKeywords">0</strong><small>Unique connected keywords</small></div>
+          <div class="stat-card"><span>Books Referenced</span><strong id="statBooks">0</strong><small>Out of 27 NT books</small></div>
+          <div class="stat-card"><span>Leading Keyword</span><strong id="statTop" class="stat-word">—</strong><small id="statTopNote">No entries yet</small></div>
+        </div>
+
+        <div class="two-col">
+          <div class="panel">
+            <div class="panel-head"><div><h3>Recent passages</h3><p>Your newest references and keywords</p></div><button class="btn secondary small" data-go="browse">View all</button></div>
+            <div id="recent"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><div><h3>Most recorded keywords</h3><p>Based on your personal tagging</p></div></div>
+            <div id="dashboardKeywords"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="add" class="page">
+        <div class="page-head">
+          <div><div class="eyebrow">Quick study entry</div><h2 id="formTitle">Add a Passage</h2><p>Choose the verses, classify the instruction, select keywords, and save. A personal comment is optional.</p></div>
+          <button id="clearBtn" class="btn secondary">Clear</button>
+        </div>
+
+        <form id="passageForm" class="form-card">
+          <input id="editId" type="hidden">
+
+          <div class="form-step">
+            <div class="step-head"><span>1</span><div><h3>Choose the passage</h3><p>Use commas for separate verses, for example <strong>12,15</strong> or <strong>12–13,15</strong>.</p></div></div>
+            <div class="reference-grid">
+              <div class="field"><label for="book">Book</label><select id="book" required></select></div>
+              <div class="field"><label for="chapter">Chapter</label><input id="chapter" class="input" type="number" min="1" required></div>
+              <div class="field verse-field"><label for="verse">Verse, range, or list</label><input id="verse" class="input" type="text" placeholder="e.g. 12,15 or 12–13,15" required></div>
+              <button id="loadVerse" class="btn primary load-btn" type="button">Load NIV passage</button>
+            </div>
+            <div id="verseStatus" class="status muted">Select a New Testament passage.</div>
+            <div id="verseBox" class="verse-box hide">
+              <div class="verse-head"><div><span class="niv-badge">NIV</span><h3 id="verseRef"></h3></div><span id="verseCount" class="muted"></span></div>
+              <div id="verseText" class="scripture"></div>
+              <div id="verseCopyright" class="copyright"></div>
+            </div>
+            <div id="dupe" class="duplicate hide"></div>
+          </div>
+
+          <div class="form-step">
+            <div class="step-head"><span>2</span><div><h3>Do or Don’t?</h3><p>Choose one or both before selecting keywords.</p></div></div>
+            <div class="type-choices">
+              <button id="typeDo" class="type-choice" type="button"><strong>Do</strong><span>A practice, response, or virtue Christians should pursue.</span></button>
+              <button id="typeDont" class="type-choice" type="button"><strong>Don’t</strong><span>A behaviour, desire, or attitude Christians should avoid.</span></button>
+            </div>
+          </div>
+
+          <div class="form-step">
+            <div class="step-head"><span>3</span><div><h3>Choose keywords</h3><p>Suggestions focus on actionable Christian living—not merely general words in the passage.</p></div></div>
+
+            <div id="suggestionPanel" class="suggestion-panel">
+              <div class="suggestion-head"><div><h4>Suggested keywords</h4><p id="suggestionHint">Load a passage and choose Do or Don’t to see suggestions.</p></div><span class="suggestion-badge">You choose</span></div>
+              <div id="suggestions" class="suggestions"></div>
+            </div>
+
+            <div class="keyword-layout">
+              <div>
+                <input id="kwSearch" class="input" type="text" placeholder="Search all keywords…">
+                <div id="kwChips" class="chips"></div>
+              </div>
+              <div class="new-keyword">
+                <h4>Create a keyword</h4>
+                <input id="newKw" class="input" type="text" placeholder="e.g. Confession">
+                <select id="newCat"></select>
+                <button id="addKw" class="btn secondary full" type="button">Add and select</button>
+              </div>
+            </div>
+
+            <div class="creed-selector">
+              <label class="check-row"><input id="jesusCreed" type="checkbox"><span><strong>This passage reflects the Jesus Creed</strong><small>Love God and love your neighbour.</small></span></label>
+              <div id="creedFocusBox" class="creed-focus hide">
+                <button type="button" data-creed-focus="Love God">Love God</button>
+                <button type="button" data-creed-focus="Love Others">Love Others</button>
+                <button type="button" data-creed-focus="Both">Both</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-step">
+            <div class="step-head"><span>4</span><div><h3>Your comment <em>optional</em></h3><p>Add a short observation when it helps. Leave it blank when the verse and keywords say enough.</p></div></div>
+            <div class="field"><label for="comment">What does this passage teach?</label><textarea id="comment" rows="5" placeholder="Optional personal comment…"></textarea></div>
+            <label class="check-row compact"><input id="fav" type="checkbox"><span><strong>Favourite or key passage</strong></span></label>
+          </div>
+
+          <div class="form-actions">
+            <div id="ready" class="muted">Load a valid passage before saving.</div>
+            <div class="button-row"><button id="cancelEdit" class="btn secondary hide" type="button">Cancel edit</button><button id="save" class="btn gold" type="submit" disabled>Save passage</button></div>
+          </div>
+        </form>
+      </section>
+
+      <section id="browse" class="page">
+        <div class="page-head"><div><div class="eyebrow">Your library</div><h2>Browse Passages</h2><p>Compact cards keep a growing library easy to scan. Tap any card for the full NIV text and your comment.</p></div><button class="btn primary" data-go="add">＋ Add passage</button></div>
+        <div class="filter-bar">
+          <input id="search" class="input" type="text" placeholder="Search reference, comment, or keyword…">
+          <select id="bookFilter"></select>
+          <select id="typeFilter"><option value="">All Do / Don’t</option><option>Do</option><option value="Don't">Don’t</option><option>Unclassified</option></select>
+          <select id="kwFilter"></select>
+          <label class="filter-check"><input id="favFilter" type="checkbox"> Favourites</label>
+        </div>
+        <div id="browseCount" class="result-count"></div>
+        <div id="passageGrid" class="passage-grid"></div>
+      </section>
+
+      <section id="keywords" class="page">
+        <div class="page-head"><div><div class="eyebrow">Theme library</div><h2>Keywords</h2><p>Keep your Christian-living themes clear and consistent.</p></div></div>
+        <div class="keyword-toolbar"><input id="kwPageSearch" class="input" type="text" placeholder="Search keywords…"><select id="catFilter"></select><button id="showCreator" class="btn primary">＋ New keyword</button></div>
+        <div id="creator" class="panel hide"><div class="inline-creator"><input id="creatorName" class="input" type="text" placeholder="Keyword name"><select id="creatorCat"></select><button id="creatorSave" class="btn gold">Save keyword</button></div></div>
+        <div id="kwGrid" class="keyword-grid"></div>
+      </section>
+
+      <section id="creed" class="page">
+        <div class="page-head"><div><div class="eyebrow">Love God · Love Others</div><h2>The Jesus Creed</h2><p>Every bubble is a passage you marked as reflecting Jesus’ call to love God and love our neighbours.</p></div></div>
+        <div class="creed-legend"><span class="legend-god">Love God</span><span class="legend-others">Love Others</span><span class="legend-both">Both</span></div>
+        <div id="creedStage" class="creed-stage"></div>
+      </section>
+
+      <section id="insights" class="page">
+        <div class="page-head"><div><div class="eyebrow">Patterns in your study</div><h2>Insights</h2><p>These figures reflect your personal tagging choices.</p></div></div>
+        <div class="panel snapshot-panel"><div class="panel-head"><div><h3>Study Snapshot</h3><p>Your quick overview</p></div></div><div id="snapshot"></div></div>
+        <div class="insight-grid">
+          <div class="panel"><div class="panel-head"><div><h3>Top keywords</h3><p>Your most frequently connected themes</p></div></div><div id="iKw"></div></div>
+          <div class="panel"><div class="panel-head"><div><h3>Books referenced</h3><p>Where your entries come from</p></div></div><div id="iBooks"></div></div>
+          <div class="panel"><div class="panel-head"><div><h3>Theme categories</h3><p>Broader areas of Christian living</p></div></div><div id="iCats"></div></div>
+          <div class="panel"><div class="panel-head"><div><h3>Do and Don’t</h3><p>Your positive and negative instructions</p></div></div><div id="iTypes"></div></div>
+        </div>
+      </section>
+
+      <section id="backup" class="page">
+        <div class="page-head"><div><div class="eyebrow">Your data belongs to you</div><h2>Backup & Export</h2><p>Your live database remains in Supabase. These downloads keep it portable for future updates.</p></div></div>
+        <div class="backup-grid">
+          <div class="panel backup-card"><div class="backup-icon">⬇</div><h3>Complete JSON backup</h3><p>Includes passages, verse selections, comments, keywords, Jesus Creed links, favourites, and timestamps.</p><button id="exportJson" class="btn primary">Download JSON</button></div>
+          <div class="panel backup-card"><div class="backup-icon">▦</div><h3>CSV for Excel</h3><p>A spreadsheet-friendly copy of your passage library.</p><button id="exportCsv" class="btn primary">Download CSV</button></div>
+          <div class="panel backup-card"><div class="backup-icon">↥</div><h3>Restore JSON</h3><p>Restores Version 2.1 or Version 3 backups into this account.</p><button id="restoreBtn" class="btn secondary">Choose backup file</button><input id="restoreFile" type="file" accept=".json,application/json" class="hide"></div>
+        </div>
+        <div class="notice"><strong>NIV wording is not stored in your database export.</strong> The app saves references and your own study data, then securely retrieves NIV text when a passage is displayed.</div>
+      </section>
+    </main>
   </div>
-  <div class="step"><div class="stephead"><div class="stepno">2</div><div><h3>Is it a Do or a Don’t?</h3><p>Select one or both. You will be able to filter your library by this later.</p></div></div>
-   <div class="type-choices"><button id="typeDo" type="button" class="type-choice" aria-pressed="false"><strong>Do</strong><span>A positive instruction, practice, or virtue</span></button><button id="typeDont" type="button" class="type-choice" aria-pressed="false"><strong>Don’t</strong><span>A warning, prohibition, or behaviour to avoid</span></button></div>
+
+  <div id="modal" class="modal hide" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div><span class="niv-badge">NIV</span><h2 id="mRef"></h2></div>
+        <button id="closeModal" class="icon-btn" aria-label="Close">✕</button>
+      </div>
+      <div id="mLoading" class="modal-loading">Loading NIV passage…</div>
+      <div id="mText" class="scripture hide"></div>
+      <div id="mCopy" class="copyright"></div>
+      <div class="modal-divider"></div>
+      <div id="mMeta" class="tags"></div>
+      <div id="mCommentBlock" class="comment-block"><div class="detail-label">Your comment</div><p id="mComment"></p></div>
+      <div class="modal-actions"><button id="mEdit" class="btn secondary">Edit</button><button id="mDelete" class="btn danger">Delete</button></div>
+    </div>
   </div>
-  <div class="step"><div class="stephead"><div class="stepno">3</div><div><h3>Choose keywords</h3><p>Select every theme that genuinely fits.</p></div></div>
-   <div class="kwlayout"><div><input id="kwSearch" class="input" placeholder="Search keywords…"><div id="kwChips" class="chips"></div></div>
-   <div class="newkw"><strong>Create a new keyword</strong><input id="newKw" class="input" style="margin-top:10px" placeholder="e.g. Hospitality"><select id="newCat" style="margin-top:8px"></select><button id="addKw" type="button" class="btn secondary" style="width:100%;margin-top:8px">Add and select</button></div></div>
-  </div>
-  <div class="step"><div class="stephead"><div class="stepno">4</div><div><h3>Your comment</h3><p>What does this passage teach about Christian living?</p></div></div>
-   <label>Your observation</label><textarea id="comment" rows="5" required placeholder="Write one clear, short observation…"></textarea>
-   <label style="display:flex;align-items:center;gap:8px;font-weight:700"><input id="fav" type="checkbox"> Mark as a favourite or key passage</label>
-  </div>
-  <div class="actions"><span id="ready" class="muted">Load a valid passage before saving.</span><div class="row"><button id="cancelEdit" type="button" class="btn secondary hide">Cancel edit</button><button id="save" class="btn gold" disabled>Save passage</button></div></div>
- </form>
-</section>
 
-<section id="browse" class="page">
- <div class="pagehead"><div><div class="eyebrow">Your library</div><h2>Browse Passages</h2><p>Search your comments or filter by book and theme.</p></div><button class="btn primary" data-go="add">＋ Add passage</button></div>
- <div class="filters"><input id="search" class="input" placeholder="Search reference, comment, or keyword…"><select id="bookFilter"></select><select id="typeFilter"><option value="">All types</option><option value="Do">Do</option><option value="Don't">Don’t</option><option value="Unclassified">Unclassified</option></select><select id="kwFilter"></select><label style="display:flex;gap:7px;align-items:center;margin:0"><input id="favFilter" type="checkbox"> Favourites</label></div>
- <div id="browseCount" class="muted" style="font-size:12px;margin:0 0 12px"></div><div id="passageGrid" class="grid"></div>
-</section>
+  <div id="toast" class="toast"></div>
 
-<section id="keywords" class="page">
- <div class="pagehead"><div><div class="eyebrow">Theme library</div><h2>Keywords</h2><p>Keep your themes clear and consistent.</p></div></div>
- <div class="kwtoolbar"><input id="kwPageSearch" class="input" placeholder="Search keywords…"><select id="catFilter"></select><button id="showCreator" class="btn primary">＋ New keyword</button></div>
- <div id="creator" class="panel hide" style="margin-bottom:14px"><div class="row"><input id="creatorName" class="input" style="flex:1" placeholder="Keyword name"><select id="creatorCat" style="flex:1"></select><button id="creatorSave" class="btn gold">Save</button></div></div>
- <div id="kwGrid" class="grid"></div>
-</section>
-
-<section id="insights" class="page">
- <div class="pagehead"><div><div class="eyebrow">Patterns in your study</div><h2>Insights</h2><p>These figures reflect your own tagging choices.</p></div></div>
- <div class="two"><div class="panel"><h3>Top keywords</h3><div id="iKw" style="margin-top:14px"></div></div><div class="panel"><h3>Books represented</h3><div id="iBooks" style="margin-top:14px"></div></div></div>
- <div class="two" style="margin-top:17px"><div class="panel"><h3>Theme categories</h3><div id="iCats" style="margin-top:14px"></div></div><div class="panel"><h3>Study snapshot</h3><div id="snapshot" style="margin-top:14px"></div></div></div>
-</section>
-
-<section id="backup" class="page">
- <div class="pagehead"><div><div class="eyebrow">Your data belongs to you</div><h2>Backup & Export</h2><p>Your live database is stored in Supabase. These files keep it portable.</p></div></div>
- <div class="backup">
-  <div class="panel"><h3>Complete JSON backup</h3><p>Best for restoring or moving the app later.</p><button id="exportJson" class="btn primary">Download JSON</button></div>
-  <div class="panel"><h3>CSV for Excel</h3><p>A spreadsheet-friendly copy of your passages.</p><button id="exportCsv" class="btn primary">Download CSV</button></div>
-  <div class="panel"><h3>Restore JSON</h3><p>Replaces the current account data with a backup.</p><button id="restoreBtn" class="btn secondary">Choose file</button><input id="restoreFile" type="file" accept=".json" class="hide"></div>
- </div>
- <div class="panel" style="margin-top:16px;color:#285d4f;background:#edf6f2"><strong>NIV wording is not stored in your backup.</strong> The app saves your reference and notes, then retrieves NIV text when displayed.</div>
-</section>
-</main>
-</div>
-
-<div id="modal" class="modal hide"><div class="modalcard"><div class="ptop"><div><span class="badge">NIV</span><h2 id="mRef" style="font:700 28px Georgia;color:var(--n)"></h2></div><button id="closeModal" class="btn secondary small">✕</button></div><div id="mLoading" class="muted">Loading NIV passage…</div><div id="mText" class="scripture hide"></div><div id="mCopy" class="copy"></div><hr style="border:0;border-top:1px solid var(--l);margin:20px 0"><strong>Your comment</strong><p id="mComment" style="line-height:1.6"></p><div id="mTags" class="tags"></div></div></div>
-<div id="toast" class="toast"></div>
-<script src="https://pkg.api.bible/fumsV3.min.js"></script>
-<script>window.fumsData=window.fumsData||[];window.fums=window.fums||function(){window.fumsData.push(arguments)}</script>
-
-<script type="module">
-import {createClient} from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
-
-const $ = id => document.getElementById(id);
-const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[char]));
-const BOOKS = [["Matthew","MAT"],["Mark","MRK"],["Luke","LUK"],["John","JHN"],["Acts","ACT"],["Romans","ROM"],["1 Corinthians","1CO"],["2 Corinthians","2CO"],["Galatians","GAL"],["Ephesians","EPH"],["Philippians","PHP"],["Colossians","COL"],["1 Thessalonians","1TH"],["2 Thessalonians","2TH"],["1 Timothy","1TI"],["2 Timothy","2TI"],["Titus","TIT"],["Philemon","PHM"],["Hebrews","HEB"],["James","JAS"],["1 Peter","1PE"],["2 Peter","2PE"],["1 John","1JN"],["2 John","2JN"],["3 John","3JN"],["Jude","JUD"],["Revelation","REV"]].map((item,index)=>({name:item[0],code:item[1],order:index+1}));
-const CATS = ["Love & Relationships","Speech","Character","Spiritual Life","Community & Service","Money & Stewardship","Purity & Self-Control","Justice & Mercy","Work & Responsibility","Suffering & Perseverance","Truth & Wisdom","Other"];
-const START = [["Love","Love & Relationships"],["Forgiveness","Love & Relationships"],["Reconciliation","Love & Relationships"],["Enemies","Love & Relationships"],["Gossip","Speech"],["Slander","Speech"],["Truthful Speech","Speech"],["Encouragement","Speech"],["Humility","Character"],["Patience","Character"],["Kindness","Character"],["Self-Control","Character"],["Integrity","Character"],["Contentment","Character"],["Prayer","Spiritual Life"],["Faith","Spiritual Life"],["Worship","Spiritual Life"],["Obedience","Spiritual Life"],["Holy Spirit","Spiritual Life"],["Unity","Community & Service"],["Service","Community & Service"],["Hospitality","Community & Service"],["Church","Community & Service"],["Generosity","Money & Stewardship"],["Money","Money & Stewardship"],["Stewardship","Money & Stewardship"],["Greed","Money & Stewardship"],["Sexual Purity","Purity & Self-Control"],["Temptation","Purity & Self-Control"],["Justice","Justice & Mercy"],["Mercy","Justice & Mercy"],["Care for the Poor","Justice & Mercy"],["Work","Work & Responsibility"],["Responsibility","Work & Responsibility"],["Perseverance","Suffering & Perseverance"],["Suffering","Suffering & Perseverance"],["Hope","Suffering & Perseverance"],["Wisdom","Truth & Wisdom"],["False Teaching","Truth & Wisdom"],["Discernment","Truth & Wisdom"]];
-
-let sb;
-let session = null;
-let mode = "signin";
-let passages = [];
-let keywords = [];
-let links = [];
-let selectedKeywords = new Set();
-let selectedTypes = new Set();
-let currentPassage = null;
-let exactDuplicateBlocked = false;
-let allowExactDuplicate = false;
-let verseTimer;
-let enterPromise = null;
-let activeUserId = null;
-let isSaving = false;
-let requestId = makeRequestId();
-let lastAttemptFingerprint = "";
-let sloganLoaded = false;
-
-function makeRequestId(){
-  return globalThis.crypto?.randomUUID?.() || `req-${Date.now()}-${Math.random().toString(36).slice(2)}`;
-}
-function toast(message){
-  const element = $("toast");
-  element.textContent = message;
-  element.classList.add("show");
-  clearTimeout(toast.timer);
-  toast.timer = setTimeout(()=>element.classList.remove("show"),3200);
-}
-function busy(button,on,text="Working…"){
-  if(on){
-    button.dataset.originalText=button.textContent;
-    button.disabled=true;
-    button.textContent=text;
-  }else{
-    button.disabled=false;
-    button.textContent=button.dataset.originalText||button.textContent;
-  }
-}
-function formatDate(value){
-  return value ? new Date(value).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"}) : "";
-}
-function classificationsFor(passage){
-  return Array.isArray(passage.classifications) ? passage.classifications : [];
-}
-function keywordLinksFor(passageId){
-  return links.filter(link=>link.passage_id===passageId);
-}
-function keywordsFor(passageId){
-  const ids = new Set(keywordLinksFor(passageId).map(link=>link.keyword_id));
-  return keywords.filter(keyword=>ids.has(keyword.id));
-}
-function usage(){
-  const counts = Object.fromEntries(keywords.map(keyword=>[keyword.id,0]));
-  links.forEach(link=>counts[link.keyword_id]=(counts[link.keyword_id]||0)+1);
-  return counts;
-}
-function empty(title,paragraph){
-  return `<div class="empty"><h3>${esc(title)}</h3><p>${esc(paragraph)}</p></div>`;
-}
-function classificationTags(passage){
-  return classificationsFor(passage).map(type=>`<span class="tag ${type==="Do"?"do":"dont"}">${type==="Don't"?"Don’t":type}</span>`).join("");
-}
-
-function page(id){
-  document.querySelectorAll(".page").forEach(section=>section.classList.toggle("on",section.id===id));
-  document.querySelectorAll("[data-page]").forEach(button=>button.classList.toggle("on",button.dataset.page===id));
-  $("side").classList.remove("open");
-  render();
-  if(id==="dashboard") loadSlogan();
-}
-
-function bind(){
-  document.querySelectorAll("[data-page]").forEach(button=>button.onclick=()=>page(button.dataset.page));
-  document.querySelectorAll("[data-go]").forEach(button=>button.onclick=()=>page(button.dataset.go));
-  $("menuBtn").onclick=()=>$("side").classList.toggle("open");
-  $("logout").onclick=()=>sb.auth.signOut();
-  document.querySelectorAll("[data-mode]").forEach(button=>button.onclick=()=>setMode(button.dataset.mode));
-  $("authForm").onsubmit=auth;
-  ["book","chapter","verse"].forEach(id=>$(id).oninput=scheduleVerseLoad);
-  $("loadVerse").onclick=loadVerse;
-  $("typeDo").onclick=()=>toggleType("Do");
-  $("typeDont").onclick=()=>toggleType("Don't");
-  $("kwSearch").oninput=renderKeywordChips;
-  $("addKw").onclick=addKeywordFromForm;
-  $("comment").oninput=readiness;
-  $("passageForm").onsubmit=savePassage;
-  $("clearBtn").onclick=clearForm;
-  $("cancelEdit").onclick=()=>{clearForm();page("browse")};
-  ["search","bookFilter","typeFilter","kwFilter","favFilter"].forEach(id=>$(id).oninput=renderBrowse);
-  $("kwPageSearch").oninput=renderKeywordPage;
-  $("catFilter").oninput=renderKeywordPage;
-  $("showCreator").onclick=()=>$("creator").classList.toggle("hide");
-  $("creatorSave").onclick=addKeywordFromPage;
-  $("exportJson").onclick=exportJSON;
-  $("exportCsv").onclick=exportCSV;
-  $("restoreBtn").onclick=()=>$("restoreFile").click();
-  $("restoreFile").onchange=restore;
-  $("closeModal").onclick=()=>$("modal").classList.add("hide");
-  $("modal").onclick=event=>{if(event.target===$("modal")) $("modal").classList.add("hide")};
-}
-
-function populate(){
-  $("book").innerHTML=`<option value="">Choose a book</option>${BOOKS.map(book=>`<option>${book.name}</option>`).join("")}`;
-  $("bookFilter").innerHTML=`<option value="">All books</option>${BOOKS.map(book=>`<option>${book.name}</option>`).join("")}`;
-  const categories=CATS.map(category=>`<option>${category}</option>`).join("");
-  $("newCat").innerHTML=categories;
-  $("creatorCat").innerHTML=categories;
-  $("catFilter").innerHTML=`<option value="">All categories</option>${categories}`;
-}
-
-function setMode(nextMode){
-  mode=nextMode;
-  document.querySelectorAll("[data-mode]").forEach(button=>button.classList.toggle("on",button.dataset.mode===nextMode));
-  $("authBtn").textContent=nextMode==="signin"?"Sign in":"Create account";
-  $("authMsg").classList.add("hide");
-}
-
-async function auth(event){
-  event.preventDefault();
-  busy($("authBtn"),true,mode==="signin"?"Signing in…":"Creating…");
-  try{
-    const email=$("email").value.trim();
-    const password=$("password").value;
-    const result=mode==="signin"
-      ? await sb.auth.signInWithPassword({email,password})
-      : await sb.auth.signUp({email,password,options:{emailRedirectTo:location.origin}});
-    if(result.error) throw result.error;
-    if(mode==="signup"&&!result.data.session){
-      $("authMsg").textContent="Account created. Check your email, confirm it, then return to sign in.";
-      $("authMsg").className="msg ok";
-    }
-  }catch(error){
-    $("authMsg").textContent=error.message;
-    $("authMsg").className="msg err";
-  }finally{
-    busy($("authBtn"),false);
-  }
-}
-
-async function init(){
-  bind();
-  populate();
-  try{
-    const response=await fetch("/api/config",{cache:"no-store"});
-    const config=await response.json();
-    if(!response.ok) throw new Error(config.error);
-    sb=createClient(config.supabaseUrl,config.supabaseKey,{auth:{persistSession:true,detectSessionInUrl:true,autoRefreshToken:true}});
-
-    // Keep the auth callback synchronous. Supabase calls are deferred outside it.
-    sb.auth.onAuthStateChange((event,nextSession)=>{
-      session=nextSession;
-      if(event==="SIGNED_OUT"){
-        setTimeout(()=>showAuth(),0);
-      }else if(event==="SIGNED_IN"){
-        setTimeout(()=>enter(),0);
-      }
-    });
-
-    const result=await sb.auth.getSession();
-    if(result.error) throw result.error;
-    session=result.data.session;
-    if(session) await enter(); else showAuth();
-  }catch(error){
-    $("loading").classList.add("hide");
-    $("auth").classList.remove("hide");
-    $("authMsg").textContent=error.message;
-    $("authMsg").className="msg err";
-  }
-}
-
-function showAuth(){
-  activeUserId=null;
-  sloganLoaded=false;
-  $("loading").classList.add("hide");
-  $("shell").classList.add("hide");
-  $("auth").classList.remove("hide");
-}
-
-async function enter(){
-  if(!session) return showAuth();
-  if(enterPromise) return enterPromise;
-  if(activeUserId===session.user.id&&!$("shell").classList.contains("hide")) return;
-
-  enterPromise=(async()=>{
-    $("loading").classList.remove("hide");
-    $("auth").classList.add("hide");
-    $("acct").textContent=session.user.email||"";
-    window.fums?.("config",{userId:session.user.id});
-    try{
-      await ensureStarterKeywords();
-      await load();
-      activeUserId=session.user.id;
-      $("shell").classList.remove("hide");
-      loadSlogan();
-    }catch(error){
-      $("shell").classList.remove("hide");
-      toast(`Could not load your library: ${error.message}`);
-    }finally{
-      $("loading").classList.add("hide");
-    }
-  })().finally(()=>{enterPromise=null});
-
-  return enterPromise;
-}
-
-async function ensureStarterKeywords(){
-  const result=await sb.from("keywords").select("*",{count:"exact",head:true});
-  if(result.error) throw result.error;
-  if(!result.count){
-    const inserted=await sb.from("keywords").insert(START.map(item=>({name:item[0],category:item[1]})));
-    if(inserted.error) throw inserted.error;
-  }
-}
-
-async function load(){
-  const [passageResult,keywordResult,linkResult]=await Promise.all([
-    sb.from("passages").select("*").order("created_at",{ascending:false}),
-    sb.from("keywords").select("*").order("name"),
-    sb.from("passage_keywords").select("*")
-  ]);
-  if(passageResult.error) throw passageResult.error;
-  if(keywordResult.error) throw keywordResult.error;
-  if(linkResult.error) throw linkResult.error;
-  passages=passageResult.data||[];
-  keywords=keywordResult.data||[];
-  links=linkResult.data||[];
-  render();
-}
-
-function render(){
-  renderFilters();
-  renderDashboard();
-  renderTypeChoices();
-  renderKeywordChips();
-  renderBrowse();
-  renderKeywordPage();
-  renderInsights();
-  readiness();
-}
-
-function renderFilters(){
-  const current=$("kwFilter").value;
-  $("kwFilter").innerHTML=`<option value="">All keywords</option>${keywords.map(keyword=>`<option value="${keyword.id}">${esc(keyword.name)}</option>`).join("")}`;
-  if([...$("kwFilter").options].some(option=>option.value===current)) $("kwFilter").value=current;
-}
-
-function bars(items){
-  if(!items.length) return `<span class="muted">No data yet.</span>`;
-  const max=Math.max(...items.map(item=>item.count),1);
-  return `<div class="bars">${items.map(item=>`<div><div class="bartop"><b>${esc(item.name)}</b><span>${item.count}</span></div><div class="track"><div class="fill" style="width:${Math.max(6,item.count/max*100)}%"></div></div></div>`).join("")}</div>`;
-}
-
-function renderDashboard(){
-  const counts=usage();
-  const top=keywords.map(keyword=>({...keyword,count:counts[keyword.id]||0})).sort((a,b)=>b.count-a.count)[0];
-  $("sPassages").textContent=passages.length;
-  $("sThemes").textContent=new Set(links.map(link=>link.keyword_id)).size;
-  $("sBooks").textContent=new Set(passages.map(passage=>passage.book)).size;
-  $("sTop").textContent=top?.count?top.name:"—";
-  $("sTopNote").textContent=top?.count?`${top.count} passage${top.count===1?"":"s"}`:"No entries yet";
-  $("recent").innerHTML=passages.length?passages.slice(0,5).map(passage=>`<div style="padding:11px;border:1px solid var(--l);border-radius:11px;margin-bottom:8px"><div class="row" style="align-items:center">${classificationTags(passage)}<b style="color:var(--n)">${esc(passage.reference)}</b></div><div class="muted" style="font-size:12px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(passage.comment)}</div></div>`).join(""):empty("Your library is ready","Add your first passage.");
-  $("dashBars").innerHTML=bars(keywords.map(keyword=>({name:keyword.name,count:counts[keyword.id]||0})).filter(item=>item.count).sort((a,b)=>b.count-a.count).slice(0,7));
-}
-
-async function loadSlogan(){
-  if(sloganLoaded||!session) return;
-  sloganLoaded=true;
-  try{
-    const response=await fetch("/api/verse?passageId=1JN.2.6-1JN.2.6",{cache:"no-store"});
-    const data=await response.json();
-    if(!response.ok) throw new Error(data.error||"Could not load 1 John 2:6.");
-    $("sloganText").textContent=cleanText(data.content);
-    $("sloganRef").textContent=`${data.reference||"1 John 2:6"} (NIV)`;
-    if(data.fumsToken) window.fums?.("trackView",data.fumsToken);
-  }catch(error){
-    $("sloganText").textContent="1 John 2:6";
-    $("sloganRef").textContent="The verse could not be loaded right now.";
-    sloganLoaded=false;
-  }
-}
-
-function parseRange(value){
-  const match=value.trim().replace(/[–—]/g,"-").match(/^(\d+)(?:\s*-\s*(\d+))?$/);
-  if(!match) return null;
-  const start=Number(match[1]);
-  const end=Number(match[2]||match[1]);
-  return start>0&&end>=start?{start,end}:null;
-}
-
-function selection(showError=true){
-  const book=BOOKS.find(item=>item.name===$("book").value);
-  const chapter=Number($("chapter").value);
-  const range=parseRange($("verse").value);
-  if(!book||!Number.isInteger(chapter)||chapter<1||!range){
-    if(showError) toast("Choose a valid book, chapter, and verse.");
-    return null;
-  }
-  return {book,chapter,start:range.start,end:range.end,id:`${book.code}.${chapter}.${range.start}-${book.code}.${chapter}.${range.end}`};
-}
-
-function scheduleVerseLoad(){
-  currentPassage=null;
-  $("verseBox").classList.add("hide");
-  $("dupe").classList.add("hide");
-  exactDuplicateBlocked=false;
-  allowExactDuplicate=false;
-  clearTimeout(verseTimer);
-  verseTimer=setTimeout(()=>{if(selection(false)) loadVerse()},700);
-  readiness();
-}
-
-function cleanText(value){
-  return String(value||"").replace(/\s+/g," ").replace(/\s([,.;:!?])/g,"$1").trim();
-}
-
-async function loadVerse(){
-  const selected=selection();
-  if(!selected) return;
-  busy($("loadVerse"),true,"Loading…");
-  $("verseStatus").textContent="Retrieving NIV passage…";
-  try{
-    const response=await fetch(`/api/verse?passageId=${encodeURIComponent(selected.id)}`,{cache:"no-store"});
-    const data=await response.json();
-    if(!response.ok) throw new Error(data.error||"The passage could not be loaded.");
-    currentPassage={...selected,...data};
-    $("verseRef").textContent=data.reference;
-    $("verseText").textContent=cleanText(data.content);
-    $("verseCopy").textContent=data.copyright||"";
-    $("verseBox").classList.remove("hide");
-    $("verseStatus").textContent="NIV passage loaded. Confirm it below.";
-    if(data.fumsToken) window.fums?.("trackView",data.fumsToken);
-    renderDuplicates(selected);
-  }catch(error){
-    currentPassage=null;
-    $("verseStatus").textContent=error.message;
-    toast(error.message);
-  }finally{
-    busy($("loadVerse"),false);
-    readiness();
-  }
-}
-
-function rangeKey(bookOrder,chapter,verse){
-  return Number(bookOrder)*1000000+Number(chapter)*1000+Number(verse);
-}
-
-function renderDuplicates(selected){
-  const start=rangeKey(selected.book.order,selected.chapter,selected.start);
-  const end=rangeKey(selected.book.order,selected.chapter,selected.end);
-  const editId=$("editId").value;
-  const matches=passages.filter(passage=>passage.id!==editId&&Number(passage.book_order)===selected.book.order&&Number(passage.start_key)<=end&&Number(passage.end_key)>=start).map(passage=>({...passage,kind:Number(passage.start_key)===start&&Number(passage.end_key)===end?"exact":"overlap"}));
-  exactDuplicateBlocked=matches.some(match=>match.kind==="exact");
-  allowExactDuplicate=false;
-  const box=$("dupe");
-  if(!matches.length){
-    box.classList.add("hide");
-    readiness();
-    return;
-  }
-  box.className=`warn ${exactDuplicateBlocked?"exact":""}`;
-  box.innerHTML=`<b>${exactDuplicateBlocked?"You already added this exact passage.":"This overlaps an earlier passage."}</b>${matches.map(match=>`<div style="margin-top:8px"><strong>${esc(match.reference)}</strong><div style="font-size:12px;margin-top:3px">${esc(match.comment||"")}</div></div>`).join("")}${exactDuplicateBlocked?`<label style="display:flex;gap:8px;align-items:flex-start;margin-top:11px"><input id="allowDupe" type="checkbox"> Save another separate comment for this exact passage anyway</label>`:""}`;
-  box.classList.remove("hide");
-  $("allowDupe")?.addEventListener("change",event=>{
-    allowExactDuplicate=event.target.checked;
-    exactDuplicateBlocked=!allowExactDuplicate;
-    readiness();
-  });
-  readiness();
-}
-
-function toggleType(type){
-  if(selectedTypes.has(type)) selectedTypes.delete(type); else selectedTypes.add(type);
-  renderTypeChoices();
-  readiness();
-}
-
-function renderTypeChoices(){
-  const mapping=[["typeDo","Do"],["typeDont","Don't"]];
-  mapping.forEach(([id,type])=>{
-    const button=$(id);
-    const on=selectedTypes.has(type);
-    button.classList.toggle("on",on);
-    button.setAttribute("aria-pressed",String(on));
-  });
-}
-
-function renderKeywordChips(){
-  const query=$("kwSearch").value.toLowerCase();
-  const list=keywords.filter(keyword=>!query||`${keyword.name} ${keyword.category}`.toLowerCase().includes(query));
-  $("kwChips").innerHTML=list.map(keyword=>`<button type="button" class="chip ${selectedKeywords.has(keyword.id)?"on":""}" data-keyword="${keyword.id}">${esc(keyword.name)}</button>`).join("");
-  document.querySelectorAll("[data-keyword]").forEach(button=>button.onclick=()=>{
-    const id=button.dataset.keyword;
-    if(selectedKeywords.has(id)) selectedKeywords.delete(id); else selectedKeywords.add(id);
-    renderKeywordChips();
-    readiness();
-  });
-}
-
-async function addKeyword(name,category){
-  const clean=name.trim();
-  if(!clean) throw new Error("Enter a keyword name.");
-  const existing=keywords.find(keyword=>keyword.name.toLowerCase()===clean.toLowerCase());
-  if(existing) return existing;
-  const result=await sb.from("keywords").insert({name:clean,category}).select().single();
-  if(result.error) throw result.error;
-  keywords.push(result.data);
-  keywords.sort((a,b)=>a.name.localeCompare(b.name));
-  return result.data;
-}
-
-async function addKeywordFromForm(){
-  busy($("addKw"),true,"Adding…");
-  try{
-    const keyword=await addKeyword($("newKw").value,$("newCat").value);
-    selectedKeywords.add(keyword.id);
-    $("newKw").value="";
-    $("kwSearch").value="";
-    render();
-    toast("Keyword added and selected.");
-  }catch(error){toast(error.message)}finally{busy($("addKw"),false)}
-}
-
-async function addKeywordFromPage(){
-  busy($("creatorSave"),true,"Saving…");
-  try{
-    await addKeyword($("creatorName").value,$("creatorCat").value);
-    $("creatorName").value="";
-    $("creator").classList.add("hide");
-    render();
-  }catch(error){toast(error.message)}finally{busy($("creatorSave"),false)}
-}
-
-function readiness(){
-  const ready=Boolean(currentPassage)&&selectedTypes.size>0&&selectedKeywords.size>0&&$("comment").value.trim().length>0&&!exactDuplicateBlocked&&!isSaving;
-  $("save").disabled=!ready;
-  $("ready").textContent=!currentPassage?"Load a valid passage before saving.":selectedTypes.size===0?"Choose Do, Don’t, or both.":exactDuplicateBlocked?"Confirm the exact duplicate first.":selectedKeywords.size===0?"Select at least one keyword.":!$("comment").value.trim()?"Write your comment.":isSaving?"Saving securely…":"Ready to save.";
-}
-
-function payloadFingerprint(payload,keywordIds,types){
-  return JSON.stringify({payload,keywordIds:[...keywordIds].sort(),types:[...types].sort()});
-}
-
-async function savePassage(event){
-  event.preventDefault();
-  if(isSaving||$("save").disabled||!currentPassage) return;
-
-  const editId=$("editId").value||null;
-  const payload={
-    book:currentPassage.book.name,
-    book_order:currentPassage.book.order,
-    start_chapter:currentPassage.chapter,
-    start_verse:currentPassage.start,
-    end_chapter:currentPassage.chapter,
-    end_verse:currentPassage.end,
-    reference:currentPassage.reference,
-    bible_id:currentPassage.bibleId,
-    api_passage_id:currentPassage.id,
-    translation:"NIV",
-    comment:$("comment").value.trim(),
-    is_favorite:$("fav").checked
-  };
-  const fingerprint=payloadFingerprint(payload,selectedKeywords,selectedTypes);
-  if(fingerprint!==lastAttemptFingerprint){
-    requestId=makeRequestId();
-    lastAttemptFingerprint=fingerprint;
-  }
-
-  isSaving=true;
-  $("passageForm").classList.add("save-lock");
-  busy($("save"),true,editId?"Updating…":"Saving…");
-  readiness();
-
-  try{
-    const result=await sb.rpc("save_passage_with_keywords",{
-      p_passage_id:editId,
-      p_client_request_id:requestId,
-      p_book:payload.book,
-      p_book_order:payload.book_order,
-      p_start_chapter:payload.start_chapter,
-      p_start_verse:payload.start_verse,
-      p_end_chapter:payload.end_chapter,
-      p_end_verse:payload.end_verse,
-      p_reference:payload.reference,
-      p_bible_id:payload.bible_id,
-      p_api_passage_id:payload.api_passage_id,
-      p_translation:payload.translation,
-      p_comment:payload.comment,
-      p_is_favorite:payload.is_favorite,
-      p_classifications:[...selectedTypes],
-      p_keyword_ids:[...selectedKeywords],
-      p_allow_exact_duplicate:allowExactDuplicate
-    });
-    if(result.error) throw result.error;
-
-    const message=editId?"Passage updated.":"Passage saved.";
-    try{
-      await load();
-      clearForm();
-      page("browse");
-      toast(message);
-    }catch(refreshError){
-      clearForm();
-      page("browse");
-      toast(`${message} The list could not refresh automatically; refresh the page once.`);
-    }
-  }catch(error){
-    if(String(error.message||"").includes("EXACT_DUPLICATE")){
-      exactDuplicateBlocked=true;
-      allowExactDuplicate=false;
-      toast("That exact passage already exists. Confirm the duplicate option if you truly want another entry.");
-      const selected=selection(false);
-      if(selected) renderDuplicates(selected);
-    }else{
-      toast(`Save failed: ${error.message}`);
-    }
-  }finally{
-    isSaving=false;
-    $("passageForm").classList.remove("save-lock");
-    busy($("save"),false);
-    readiness();
-  }
-}
-
-function clearForm(){
-  $("passageForm").reset();
-  $("editId").value="";
-  $("formTitle").textContent="Add a Passage";
-  $("save").textContent="Save passage";
-  $("cancelEdit").classList.add("hide");
-  $("verseBox").classList.add("hide");
-  $("dupe").classList.add("hide");
-  $("verseStatus").textContent="Select a New Testament passage.";
-  currentPassage=null;
-  selectedKeywords=new Set();
-  selectedTypes=new Set();
-  exactDuplicateBlocked=false;
-  allowExactDuplicate=false;
-  requestId=makeRequestId();
-  lastAttemptFingerprint="";
-  renderTypeChoices();
-  renderKeywordChips();
-  readiness();
-}
-
-async function editPassage(id){
-  const passage=passages.find(item=>item.id===id);
-  if(!passage) return;
-  page("add");
-  $("editId").value=id;
-  $("formTitle").textContent="Edit Passage";
-  $("save").textContent="Update passage";
-  $("cancelEdit").classList.remove("hide");
-  $("book").value=passage.book;
-  $("chapter").value=passage.start_chapter;
-  $("verse").value=passage.start_verse===passage.end_verse?passage.start_verse:`${passage.start_verse}-${passage.end_verse}`;
-  $("comment").value=passage.comment;
-  $("fav").checked=passage.is_favorite;
-  selectedKeywords=new Set(keywordLinksFor(id).map(link=>link.keyword_id));
-  selectedTypes=new Set(classificationsFor(passage));
-  requestId=makeRequestId();
-  lastAttemptFingerprint="";
-  renderTypeChoices();
-  renderKeywordChips();
-  await loadVerse();
-}
-
-async function deletePassage(id){
-  const passage=passages.find(item=>item.id===id);
-  if(!passage||!confirm(`Delete ${passage.reference}?`)) return;
-  const result=await sb.from("passages").delete().eq("id",id);
-  if(result.error) return toast(result.error.message);
-  await load();
-  toast("Passage deleted.");
-}
-
-async function toggleFavourite(id){
-  const passage=passages.find(item=>item.id===id);
-  const result=await sb.from("passages").update({is_favorite:!passage.is_favorite}).eq("id",id);
-  if(result.error) return toast(result.error.message);
-  passage.is_favorite=!passage.is_favorite;
-  render();
-}
-
-function renderBrowse(){
-  const query=$("search").value.toLowerCase();
-  const book=$("bookFilter").value;
-  const type=$("typeFilter").value;
-  const keyword=$("kwFilter").value;
-  const favourites=$("favFilter").checked;
-  const list=passages.filter(passage=>{
-    const names=keywordsFor(passage.id).map(item=>item.name);
-    const types=classificationsFor(passage);
-    const typeMatch=!type||(type==="Unclassified"?types.length===0:types.includes(type));
-    return (!query||`${passage.reference} ${passage.comment} ${names.join(" ")} ${types.join(" ")}`.toLowerCase().includes(query))&&(!book||passage.book===book)&&typeMatch&&(!keyword||links.some(link=>link.passage_id===passage.id&&link.keyword_id===keyword))&&(!favourites||passage.is_favorite);
-  });
-  $("browseCount").textContent=`${list.length} of ${passages.length} passages shown`;
-  $("passageGrid").innerHTML=list.length?list.map(passage=>`<article class="card passage"><div class="ptop"><div><h3>${esc(passage.reference)}</h3><small class="muted">NIV</small></div><button class="star ${passage.is_favorite?"on":""}" data-favourite="${passage.id}">${passage.is_favorite?"★":"☆"}</button></div><div class="tags">${classificationTags(passage)}</div><p class="comment">${esc(passage.comment)}</p><div class="tags">${keywordsFor(passage.id).map(keyword=>`<span class="tag">${esc(keyword.name)}</span>`).join("")}</div><div class="foot"><small class="muted">${formatDate(passage.created_at)}</small><div class="row"><button class="btn secondary small" data-view="${passage.id}">View</button><button class="btn secondary small" data-edit="${passage.id}">Edit</button><button class="btn secondary small" data-delete="${passage.id}">Delete</button></div></div></article>`).join(""):empty("No passages found",passages.length?"Try another filter.":"Add your first passage.");
-  document.querySelectorAll("[data-view]").forEach(button=>button.onclick=()=>viewPassage(button.dataset.view));
-  document.querySelectorAll("[data-edit]").forEach(button=>button.onclick=()=>editPassage(button.dataset.edit));
-  document.querySelectorAll("[data-delete]").forEach(button=>button.onclick=()=>deletePassage(button.dataset.delete));
-  document.querySelectorAll("[data-favourite]").forEach(button=>button.onclick=()=>toggleFavourite(button.dataset.favourite));
-}
-
-async function viewPassage(id){
-  const passage=passages.find(item=>item.id===id);
-  $("mRef").textContent=passage.reference;
-  $("mComment").textContent=passage.comment;
-  $("mTags").innerHTML=`${classificationTags(passage)}${keywordsFor(id).map(keyword=>`<span class="tag">${esc(keyword.name)}</span>`).join("")}`;
-  $("mLoading").classList.remove("hide");
-  $("mLoading").textContent="Loading NIV passage…";
-  $("mText").classList.add("hide");
-  $("mCopy").textContent="";
-  $("modal").classList.remove("hide");
-  try{
-    const response=await fetch(`/api/verse?passageId=${encodeURIComponent(passage.api_passage_id)}`,{cache:"no-store"});
-    const data=await response.json();
-    if(!response.ok) throw new Error(data.error);
-    $("mRef").textContent=data.reference;
-    $("mText").textContent=cleanText(data.content);
-    $("mCopy").textContent=data.copyright||"";
-    $("mLoading").classList.add("hide");
-    $("mText").classList.remove("hide");
-    if(data.fumsToken) window.fums?.("trackView",data.fumsToken);
-  }catch(error){
-    $("mLoading").textContent=error.message;
-  }
-}
-
-function renderKeywordPage(){
-  const counts=usage();
-  const query=$("kwPageSearch").value.toLowerCase();
-  const category=$("catFilter").value;
-  const list=keywords.filter(keyword=>(!query||keyword.name.toLowerCase().includes(query))&&(!category||keyword.category===category)).sort((a,b)=>(counts[b.id]||0)-(counts[a.id]||0)||a.name.localeCompare(b.name));
-  $("kwGrid").innerHTML=list.map(keyword=>`<div class="card kwcard"><div class="kwtop"><div><h3 style="margin:0;color:var(--n)">${esc(keyword.name)}</h3><small class="muted">${esc(keyword.category)}</small></div><div class="count">${counts[keyword.id]||0}</div></div><div class="row" style="margin-top:13px"><button class="btn secondary small" data-keyword-view="${keyword.id}">View passages</button><button class="btn secondary small" data-keyword-delete="${keyword.id}" ${(counts[keyword.id]||0)?"disabled":""}>Delete</button></div></div>`).join("");
-  document.querySelectorAll("[data-keyword-view]").forEach(button=>button.onclick=()=>{$("kwFilter").value=button.dataset.keywordView;page("browse")});
-  document.querySelectorAll("[data-keyword-delete]").forEach(button=>button.onclick=()=>deleteKeyword(button.dataset.keywordDelete));
-}
-
-async function deleteKeyword(id){
-  if(usage()[id]) return toast("This keyword is still used.");
-  const keyword=keywords.find(item=>item.id===id);
-  if(!confirm(`Delete ${keyword.name}?`)) return;
-  const result=await sb.from("keywords").delete().eq("id",id);
-  if(result.error) return toast(result.error.message);
-  await load();
-}
-
-function renderInsights(){
-  const counts=usage();
-  const books={};
-  const categories={};
-  passages.forEach(passage=>books[passage.book]=(books[passage.book]||0)+1);
-  links.forEach(link=>{
-    const keyword=keywords.find(item=>item.id===link.keyword_id);
-    if(keyword) categories[keyword.category]=(categories[keyword.category]||0)+1;
-  });
-  $("iKw").innerHTML=bars(keywords.map(keyword=>({name:keyword.name,count:counts[keyword.id]||0})).filter(item=>item.count).sort((a,b)=>b.count-a.count).slice(0,10));
-  $("iBooks").innerHTML=bars(Object.entries(books).map(([name,count])=>({name,count})).sort((a,b)=>b.count-a.count));
-  $("iCats").innerHTML=bars(Object.entries(categories).map(([name,count])=>({name,count})).sort((a,b)=>b.count-a.count));
-  $("snapshot").innerHTML=`<div class="stats" style="grid-template-columns:1fr 1fr;margin:0"><div class="card stat"><span>Passages</span><strong>${passages.length}</strong></div><div class="card stat"><span>Favourites</span><strong>${passages.filter(passage=>passage.is_favorite).length}</strong></div><div class="card stat"><span>Do entries</span><strong>${passages.filter(passage=>classificationsFor(passage).includes("Do")).length}</strong></div><div class="card stat"><span>Don’t entries</span><strong>${passages.filter(passage=>classificationsFor(passage).includes("Don't")).length}</strong></div></div>`;
-}
-
-function backup(){
-  return {app:"Walk Worthy",version:2.1,exported_at:new Date().toISOString(),passages:passages.map(({user_id,start_key,end_key,...rest})=>rest),keywords:keywords.map(({user_id,...rest})=>rest),passage_keywords:links.map(({user_id,...rest})=>rest)};
-}
-function download(name,text,type){
-  const anchor=document.createElement("a");
-  const url=URL.createObjectURL(new Blob([text],{type}));
-  anchor.href=url;
-  anchor.download=name;
-  anchor.click();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
-}
-function exportJSON(){
-  download(`walk-worthy-backup-${new Date().toISOString().slice(0,10)}.json`,JSON.stringify(backup(),null,2),"application/json");
-}
-function csvCell(value){return `"${String(value??"").replace(/"/g,'""')}"`}
-function exportCSV(){
-  const rows=[["Reference","Book","Chapter","Verse Range","Do / Don't","Comment","Keywords","Favourite","Created"],...passages.map(passage=>[passage.reference,passage.book,passage.start_chapter,passage.start_verse===passage.end_verse?passage.start_verse:`${passage.start_verse}-${passage.end_verse}`,classificationsFor(passage).join("; "),passage.comment,keywordsFor(passage.id).map(keyword=>keyword.name).join("; "),passage.is_favorite?"Yes":"No",passage.created_at])];
-  download(`walk-worthy-passages-${new Date().toISOString().slice(0,10)}.csv`,"\uFEFF"+rows.map(row=>row.map(csvCell).join(",")).join("\n"),"text/csv");
-}
-
-async function restore(event){
-  const file=event.target.files[0];
-  event.target.value="";
-  if(!file) return;
-  try{
-    const data=JSON.parse(await file.text());
-    if(data.app!=="Walk Worthy"||!Array.isArray(data.passages)||!Array.isArray(data.keywords)||!Array.isArray(data.passage_keywords)) throw new Error("Invalid Walk Worthy backup.");
-    if(!confirm("Replace all current data with this backup?")) return;
-    $("loading").classList.remove("hide");
-    let result=await sb.from("passage_keywords").delete().neq("passage_id","00000000-0000-0000-0000-000000000000");
-    if(result.error) throw result.error;
-    result=await sb.from("passages").delete().neq("id","00000000-0000-0000-0000-000000000000");
-    if(result.error) throw result.error;
-    result=await sb.from("keywords").delete().neq("id","00000000-0000-0000-0000-000000000000");
-    if(result.error) throw result.error;
-    if(data.keywords.length){result=await sb.from("keywords").insert(data.keywords.map(({user_id,...rest})=>rest));if(result.error) throw result.error}
-    if(data.passages.length){result=await sb.from("passages").insert(data.passages.map(({user_id,start_key,end_key,...rest})=>rest));if(result.error) throw result.error}
-    if(data.passage_keywords.length){result=await sb.from("passage_keywords").insert(data.passage_keywords.map(({user_id,...rest})=>rest));if(result.error) throw result.error}
-    await load();
-    page("dashboard");
-    toast("Backup restored.");
-  }catch(error){
-    toast(error.message);
-  }finally{
-    $("loading").classList.add("hide");
-  }
-}
-
-init();
-</script>
-</body></html>
+  <script src="https://pkg.api.bible/fumsV3.min.js"></script>
+  <script>window.fumsData=window.fumsData||[];window.fums=window.fums||function(){window.fumsData.push(arguments)}</script>
+  <script type="module" src="/app.js?v=3.0.0"></script>
+</body>
+</html>

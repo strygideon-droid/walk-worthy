@@ -1,38 +1,55 @@
-# Walk Worthy Cloud v2
+# Walk Worthy Website — Version 3
 
-This package is ready for GitHub and Vercel.
+This is a website update for the existing Walk Worthy Vercel project. It is **not** an installable app/PWA.
 
-## Included
-- Supabase email login and cloud sync
-- Automatic NIV display through a server-side Vercel function
-- Quick entry: passage → keywords → one comment
-- Exact duplicate and overlapping-passage warnings
-- Search, favourites, keywords, and insights
-- JSON backup/restore and CSV export
-- API.Bible FUMS view reporting
+## Version 3 features
 
-## Vercel environment variables
-Add these exact names before deploying:
+- Action-focused keyword suggestions after the NIV passage and Do/Don't choice
+- Suggestions focus on how Christians should live, not merely general words in the passage
+- Study Snapshot moved to the top of Insights
+- Compact Browse Passage cards
+- Comments hidden from Browse cards
+- Full NIV text, classifications, keywords, and optional comment in an in-app popup
+- Non-consecutive verses such as `12,15` and mixed selections such as `12-13,15`
+- Comments are optional
+- Dashboard wording changed to **Keywords Used**
+- Recent Passages shows keywords instead of comments
+- Jesus Creed checkbox with Love God / Love Others / Both
+- Dedicated Jesus Creed visual page with clickable verse bubbles
+- Existing login, cloud sync, JSON backup, CSV export, duplicate protection, and mobile browser access remain
 
-- `SUPABASE_URL`
-- `SUPABASE_PUBLISHABLE_KEY`
-- `API_BIBLE_KEY`
+## Important update order
 
-Optional: `API_BIBLE_ID`. The default is the NIV Bible ID.
+1. Keep the JSON backup you already downloaded.
+2. Run `SQL_MIGRATION_v3.sql` in Supabase SQL Editor.
+3. Upload the website files to the existing GitHub `walk-worthy` repository.
+4. Commit the changes to the `main` branch.
+5. Vercel should redeploy automatically.
+6. When Vercel shows **Ready**, open the existing website address and press `Ctrl + F5` once.
 
-Never use a Supabase secret or service-role key.
+## Files to upload to GitHub
 
-## Deployment
-1. Unzip this package.
-2. Create a new private GitHub repository called `walk-worthy`.
-3. Upload the actual files and the `api` folder. Do not upload only the ZIP.
-4. In Vercel choose Add New → Project and import the GitHub repository.
-5. Framework preset: Other.
-6. Add the three environment variables above.
-7. Deploy.
-8. Copy the final `.vercel.app` URL.
-9. In Supabase open Authentication → URL Configuration.
-10. Set Site URL to the Vercel URL and add the same URL under Redirect URLs.
-11. Open the app, create your account, confirm your email, and sign in.
+Upload these files and folders from this package:
 
-The app stores references and your own notes. NIV wording is fetched when shown and is not included in database exports.
+- `api/`
+- `app.js`
+- `index.html`
+- `package.json`
+- `styles.css`
+- `vercel.json`
+
+You do not need to upload the SQL migration to GitHub. It is only run once in Supabase.
+
+## Data safety
+
+The migration adds new columns and a new save function. It does not delete existing passages, keywords, or passage-keyword connections.
+
+Existing passages are automatically converted into Version 3's verse-segment format.
+
+## Keyword suggestions
+
+Suggestions are generated inside the website from the NIV wording and your Do/Don't selection. They are never selected automatically. A suggested keyword is created only when you click it.
+
+## Website only
+
+This package deliberately contains no app manifest, service worker, install prompt, app icons, or offline mode.

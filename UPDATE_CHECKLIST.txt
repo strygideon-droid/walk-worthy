@@ -1,0 +1,42 @@
+WALK WORTHY WEBSITE VERSION 3 — UPDATE CHECKLIST
+
+BEFORE STARTING
+[x] JSON backup downloaded
+
+STEP 1 — SUPABASE
+1. Open Supabase.
+2. Open SQL Editor → New query.
+3. Open SQL_MIGRATION_v3.sql in Notepad.
+4. Copy all text and paste it into Supabase.
+5. Click Run.
+6. Continue only after it says: Success. No rows returned.
+
+STEP 2 — GITHUB
+1. Open the existing walk-worthy repository.
+2. Click Add file → Upload files.
+3. Upload:
+   - api folder
+   - app.js
+   - index.html
+   - package.json
+   - styles.css
+   - vercel.json
+4. Commit changes to main.
+
+STEP 3 — VERCEL
+1. Vercel should deploy automatically after the GitHub commit.
+2. Wait until the newest deployment says Ready.
+3. Open the same Walk Worthy website address.
+4. Press Ctrl + F5 once.
+
+STEP 4 — TEST
+1. Confirm the dashboard says Keywords Used and Books Referenced.
+2. Confirm Study Snapshot is at the top of Insights.
+3. Add a passage using non-consecutive verses, such as 1 John 2:12,15.
+4. Confirm the NIV text loads only those verses.
+5. Choose Do or Don't and check the suggested keywords.
+6. Save without a comment to confirm comments are optional.
+7. Open Browse Passages and tap the compact card.
+8. Confirm the popup shows the full NIV passage and comment area.
+9. Mark one passage as Jesus Creed and confirm it appears on the Jesus Creed page.
+10. Refresh and confirm the website opens normally.
