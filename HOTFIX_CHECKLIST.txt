@@ -1,10 +1,9 @@
-Walk Worthy Website v4.0.5 hotfix
+Walk Worthy Website v4.0.6 hotfix
 
-1. Upload all files from this package to GitHub, replacing existing files.
-2. Make sure the new assets/footprint-trail-exact.png file is uploaded too.
-3. Commit the changes.
-4. Let Vercel redeploy automatically.
-5. Refresh the browser and check:
-   - hero footprint trail now uses the approved exact artwork asset
-   - clicking the donut chart opens a larger Top 10 keyword popup
-   - version label shows Walk Worthy v4.0.5
+Upload all website files and folders to GitHub, including assets/footprint-trail-exact.png.
+No SQL migration is required.
+
+Check after deployment:
+- Sidebar shows Walk Worthy v4.0.6
+- Donut chart still opens the Top 10 popup
+- The entire footprint trail is visible without being cut off at the bottom or right

@@ -49,3 +49,8 @@ This hotfix makes two visible dashboard changes:
 ## Hotfix v4.0.5
 - Replaced the dashboard hero footprints with the approved extracted footprint trail asset.
 - Made the dashboard donut chart clickable so it opens a larger Top 10 keyword view.
+
+
+## Hotfix v4.0.6
+- Replaced the tight-cropped footprint asset with a padded version.
+- Reduced and repositioned the exact footprint artwork so the complete trail remains visible inside the dashboard hero.

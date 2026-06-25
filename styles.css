@@ -150,3 +150,9 @@ button{cursor:pointer}.btn{border:1px solid transparent;border-radius:11px;paddi
 .keyword-chart-grid .donut-legend-row strong{color:var(--gold2)}
 .keyword-chart-note{margin:0;color:rgba(255,255,255,.76);font-size:13px;line-height:1.55}
 @media (max-width:820px){.keyword-chart-grid{grid-template-columns:1fr;justify-items:center}.keyword-chart-grid .donut-legend{width:100%}}
+
+
+/* v4.0.6 footprint fit correction: show the complete approved trail without clipping */
+.footprint-reference-img{right:-1%;bottom:-7%;height:115%;width:auto;max-width:none;object-fit:contain;display:block;opacity:1}
+@media (max-width:1100px){.footprint-reference-img{right:-2%;bottom:-6%;height:112%}}
+@media (max-width:820px){.footprint-reference-img{right:-5%;bottom:-5%;height:108%;opacity:.96}}
