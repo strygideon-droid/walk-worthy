@@ -248,6 +248,28 @@ function barList(items,emptyText="No data yet."){
   return `<div class="bar-list">${items.map(item=>`<div><div class="bar-top"><span class="bar-name">${esc(item.name)}</span><span class="bar-count">${item.count}</span></div><div class="bar-track"><div class="bar-fill" style="width:${Math.max(6,item.count/max*100)}%"></div></div></div>`).join("")}</div>`;
 }
 
+function donutChart(items,emptyText="No keywords recorded yet."){
+  const topFive=items.slice(0,5);
+  if(!topFive.length) return `<span class="muted">${esc(emptyText)}</span>`;
+
+  const palette=["#d5aa52","#24517d","#efd58e","#6f8eaa","#b9853e"];
+  const total=topFive.reduce((sum,item)=>sum+item.count,0)||1;
+  let cursor=0;
+  const slices=topFive.map((item,index)=>{
+    const start=cursor;
+    cursor+=(item.count/total)*100;
+    return `${palette[index]} ${start.toFixed(2)}% ${cursor.toFixed(2)}%`;
+  }).join(",");
+
+  const label=topFive.map(item=>`${item.name}: ${item.count}`).join(", ");
+  return `<div class="donut-layout">
+    <div class="donut-chart" role="img" aria-label="Top five keywords: ${esc(label)}" style="background:conic-gradient(${slices})">
+      <div class="donut-hole"><strong>${total}</strong><span>Top 5 uses</span></div>
+    </div>
+    <div class="donut-legend">${topFive.map((item,index)=>`<div class="donut-legend-row"><span class="donut-swatch" style="background:${palette[index]}"></span><span class="donut-name">${esc(item.name)}</span><strong>${item.count}</strong></div>`).join("")}</div>
+  </div>`;
+}
+
 function page(id,scroll=true){
   document.querySelectorAll(".page").forEach(section=>section.classList.toggle("on",section.id===id));
   document.querySelectorAll("[data-page]").forEach(button=>button.classList.toggle("on",button.dataset.page===id));
@@ -474,7 +496,7 @@ function renderDashboard(){
   }).join("")}</div>`:emptyState("Your library is ready","Add your first passage.","Add passage","add");
   document.querySelectorAll("[data-recent-id]").forEach(item=>item.onclick=()=>viewPassage(item.dataset.recentId));
 
-  $("dashboardKeywords").innerHTML=barList(keywordSummary.slice(0,7),"No keywords recorded yet.");
+  $("dashboardKeywords").innerHTML=donutChart(keywordSummary,"No keywords recorded yet.");
   wireGoButtons();
 }
 

@@ -36,3 +36,11 @@ This hotfix updates the existing Version 4 website. It does not require another 
 ## Walk Worthy v4.0.3
 
 This hotfix refines the dashboard hero footprints to match the approved concept more closely, especially by reducing the size of the first footprints and keeping the trail lighter and more elegant.
+
+
+## Walk Worthy v4.0.4
+
+This hotfix makes two visible dashboard changes:
+
+- replaces the “Most recorded keywords” bar list with a Top 5 Keywords donut chart and legend;
+- resizes and repositions the hero footprints to match the approved concept more closely, with substantially smaller first prints and a smoother upward trail.
