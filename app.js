@@ -195,7 +195,15 @@ function keywordsFor(passageId){
 
 function keywordUsage(){
   const counts = Object.fromEntries(keywords.map(keyword=>[keyword.id,0]));
-  links.forEach(link=>counts[link.keyword_id]=(counts[link.keyword_id]||0)+1);
+  const validPassageIds = new Set(passages.map(passage=>passage.id));
+  const seen = new Set();
+  links.forEach(link=>{
+    if(!validPassageIds.has(link.passage_id) || !(link.keyword_id in counts)) return;
+    const pair = `${link.passage_id}:${link.keyword_id}`;
+    if(seen.has(pair)) return;
+    seen.add(pair);
+    counts[link.keyword_id] += 1;
+  });
   return counts;
 }
 
@@ -204,13 +212,19 @@ function normalizeKeywordName(value){
 }
 
 function connectedKeywordSummary(){
-  const byId=new Map(keywords.map(keyword=>[keyword.id,keyword]));
-  const grouped=new Map();
+  const byId = new Map(keywords.map(keyword=>[keyword.id,keyword]));
+  const validPassageIds = new Set(passages.map(passage=>passage.id));
+  const grouped = new Map();
   links.forEach(link=>{
-    const keyword=byId.get(link.keyword_id);
+    // Count only links attached to passages that still exist in the user's library.
+    // This deliberately ignores orphaned link rows left behind by older versions.
+    if(!validPassageIds.has(link.passage_id)) return;
+    const keyword = byId.get(link.keyword_id);
     if(!keyword) return;
-    const displayName=String(keyword.name||"").trim().replace(/\s+/g," ");
-    const normalized=normalizeKeywordName(displayName);
+    const displayName = String(keyword.name||"").normalize("NFKC").trim().replace(/\s+/g," ");
+    const normalized = normalizeKeywordName(displayName)
+      .replace(/[’‘]/g,"'")
+      .replace(/[–—]/g,"-");
     if(!normalized) return;
     if(!grouped.has(normalized)) grouped.set(normalized,{name:displayName,passageIds:new Set()});
     grouped.get(normalized).passageIds.add(link.passage_id);

@@ -1,24 +1,12 @@
-WALK WORTHY VERSION 4.0.1 HOTFIX — CHECKLIST
+Walk Worthy v4.0.3 Hotfix
 
-BEFORE STARTING
-[ ] Download a fresh JSON backup from Walk Worthy.
+Files to upload and replace in GitHub:
+- api/
+- app.js
+- index.html
+- package.json
+- styles.css
+- vercel.json
 
-GITHUB
-[ ] Extract the hotfix ZIP.
-[ ] Upload and replace: api folder, app.js, index.html, package.json, styles.css, vercel.json.
-[ ] Commit changes to main.
-
-DEPLOYMENT
-[ ] Wait a few minutes for the automatic Vercel deployment.
-[ ] Open the normal Walk Worthy URL.
-[ ] Hard-refresh once.
-
-QUICK TEST
-[ ] Mobile sidebar scrolls and shows Walk Worthy v4.0.1.
-[ ] Dashboard footprints match the approved detailed winding design.
-[ ] Unique Keywords Used shows the correct normalized total.
-[ ] Browse filters display full labels without clipping.
-[ ] Both Insights popups use the dark blue and gold chart style.
-[ ] Existing passages, keywords, and login still work.
-
-NO SQL IS REQUIRED FOR THIS HOTFIX.
+No SQL migration is required.
+Primary fix: refine dashboard hero footprint design to match the approved lighter, smaller-first-footprint concept.
