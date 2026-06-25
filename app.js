@@ -199,6 +199,27 @@ function keywordUsage(){
   return counts;
 }
 
+function normalizeKeywordName(value){
+  return String(value||"").trim().replace(/\s+/g," ").toLocaleLowerCase();
+}
+
+function connectedKeywordSummary(){
+  const byId=new Map(keywords.map(keyword=>[keyword.id,keyword]));
+  const grouped=new Map();
+  links.forEach(link=>{
+    const keyword=byId.get(link.keyword_id);
+    if(!keyword) return;
+    const displayName=String(keyword.name||"").trim().replace(/\s+/g," ");
+    const normalized=normalizeKeywordName(displayName);
+    if(!normalized) return;
+    if(!grouped.has(normalized)) grouped.set(normalized,{name:displayName,passageIds:new Set()});
+    grouped.get(normalized).passageIds.add(link.passage_id);
+  });
+  return [...grouped.values()]
+    .map(item=>({name:item.name,count:item.passageIds.size}))
+    .sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name));
+}
+
 function classificationTags(passage){
   return classificationsFor(passage).map(type=>`<span class="tag ${type==="Do"?"do":"dont"}">${type==="Don't"?"Don’t":type}</span>`).join("");
 }
@@ -422,10 +443,10 @@ function renderFilters(){
 }
 
 function renderDashboard(){
-  const counts=keywordUsage();
-  const top=keywords.map(keyword=>({...keyword,count:counts[keyword.id]||0})).sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name))[0];
+  const keywordSummary=connectedKeywordSummary();
+  const top=keywordSummary[0];
   $("statPassages").textContent=passages.length;
-  $("statKeywords").textContent=new Set(links.map(link=>link.keyword_id)).size;
+  $("statKeywords").textContent=keywordSummary.length;
   $("statBooks").textContent=new Set(passages.map(passage=>passage.book)).size;
   $("statTop").textContent=top?.count?top.name:"—";
   $("statTopNote").textContent=top?.count?`${top.count} passage${top.count===1?"":"s"}`:"No entries yet";
@@ -439,7 +460,7 @@ function renderDashboard(){
   }).join("")}</div>`:emptyState("Your library is ready","Add your first passage.","Add passage","add");
   document.querySelectorAll("[data-recent-id]").forEach(item=>item.onclick=()=>viewPassage(item.dataset.recentId));
 
-  $("dashboardKeywords").innerHTML=barList(keywords.map(keyword=>({name:keyword.name,count:counts[keyword.id]||0})).filter(item=>item.count).sort((a,b)=>b.count-a.count).slice(0,7),"No keywords recorded yet.");
+  $("dashboardKeywords").innerHTML=barList(keywordSummary.slice(0,7),"No keywords recorded yet.");
   wireGoButtons();
 }
 
@@ -1115,7 +1136,7 @@ function positionCreedBubbles(){
 }
 
 function renderInsights(){
-  const counts=keywordUsage();
+  const keywordSummary=connectedKeywordSummary();
   const books={};
   const categories={};
   passages.forEach(passage=>books[passage.book]=(books[passage.book]||0)+1);
@@ -1126,8 +1147,8 @@ function renderInsights(){
 
   const doCount=passages.filter(passage=>classificationsFor(passage).includes("Do")).length;
   const dontCount=passages.filter(passage=>classificationsFor(passage).includes("Don't")).length;
-  $("snapshot").innerHTML=`<div class="snapshot-grid"><div class="snapshot"><span>Passages</span><strong>${passages.length}</strong></div><div class="snapshot"><span>Unique Keywords Used</span><strong>${new Set(links.map(link=>link.keyword_id)).size}</strong></div><div class="snapshot"><span>Books Referenced</span><strong>${new Set(passages.map(passage=>passage.book)).size}</strong></div><div class="snapshot"><span>Jesus Creed</span><strong>${passages.filter(passage=>passage.is_jesus_creed).length}</strong></div></div>`;
-  $("iKw").innerHTML=barList(keywords.map(keyword=>({name:keyword.name,count:counts[keyword.id]||0})).filter(item=>item.count).sort((a,b)=>b.count-a.count).slice(0,10));
+  $("snapshot").innerHTML=`<div class="snapshot-grid"><div class="snapshot"><span>Passages</span><strong>${passages.length}</strong></div><div class="snapshot"><span>Unique Keywords Used</span><strong>${keywordSummary.length}</strong></div><div class="snapshot"><span>Books Referenced</span><strong>${new Set(passages.map(passage=>passage.book)).size}</strong></div><div class="snapshot"><span>Jesus Creed</span><strong>${passages.filter(passage=>passage.is_jesus_creed).length}</strong></div></div>`;
+  $("iKw").innerHTML=barList(keywordSummary.slice(0,10));
   const allBooks=Object.entries(books).map(([name,count])=>({name,count})).sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name));
   $("iBooks").innerHTML=barList(allBooks.slice(0,10));
   $("iCats").innerHTML=barList(Object.entries(categories).map(([name,count])=>({name,count})).sort((a,b)=>b.count-a.count));
@@ -1135,8 +1156,7 @@ function renderInsights(){
 }
 
 function insightKeywordData(){
-  const counts=keywordUsage();
-  return keywords.map(keyword=>({name:keyword.name,count:counts[keyword.id]||0})).filter(item=>item.count).sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name));
+  return connectedKeywordSummary();
 }
 
 function insightBookData(){
@@ -1150,7 +1170,8 @@ function openInsightList(kind){
   const isKeywords=kind==="keywords";
   const data=isKeywords?insightKeywordData():insightBookData();
   $("insightListTitle").textContent=isKeywords?"All Keywords":"All Books Referenced";
-  $("insightListContent").innerHTML=data.length?`<div class="ranking-list">${data.map((item,index)=>`<div class="ranking-row"><span class="ranking-number">${index+1}</span><span class="ranking-name">${esc(item.name)}</span><strong>${item.count}</strong></div>`).join("")}</div>`:`<div class="empty"><h3>No data yet</h3></div>`;
+  const max=Math.max(...data.map(item=>item.count),1);
+  $("insightListContent").innerHTML=data.length?`<div class="ranking-chart">${data.map((item,index)=>`<div class="ranking-chart-row"><div class="ranking-chart-top"><span class="ranking-number">${index+1}</span><span class="ranking-name">${esc(item.name)}</span><strong>${item.count}</strong></div><div class="ranking-chart-track"><div class="ranking-chart-fill" style="width:${Math.max(5,item.count/max*100)}%"></div></div></div>`).join("")}</div>`:`<div class="empty insight-empty"><h3>No data yet</h3></div>`;
   $("insightListModal").classList.remove("hide");
 }
 
