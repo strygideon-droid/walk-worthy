@@ -248,26 +248,31 @@ function barList(items,emptyText="No data yet."){
   return `<div class="bar-list">${items.map(item=>`<div><div class="bar-top"><span class="bar-name">${esc(item.name)}</span><span class="bar-count">${item.count}</span></div><div class="bar-track"><div class="bar-fill" style="width:${Math.max(6,item.count/max*100)}%"></div></div></div>`).join("")}</div>`;
 }
 
-function donutChart(items,emptyText="No keywords recorded yet."){
-  const topFive=items.slice(0,5);
-  if(!topFive.length) return `<span class="muted">${esc(emptyText)}</span>`;
+const DONUT_PALETTE=["#d5aa52","#24517d","#efd58e","#6f8eaa","#b9853e","#8ea7c0","#e8c77a","#3e75a7","#9b6f35","#cfd9e3"];
 
-  const palette=["#d5aa52","#24517d","#efd58e","#6f8eaa","#b9853e"];
-  const total=topFive.reduce((sum,item)=>sum+item.count,0)||1;
+function donutChart(items,emptyText="No keywords recorded yet.",limit=5,options={}){
+  const topItems=items.slice(0,limit);
+  if(!topItems.length) return `<span class="muted">${esc(emptyText)}</span>`;
+
+  const total=topItems.reduce((sum,item)=>sum+item.count,0)||1;
   let cursor=0;
-  const slices=topFive.map((item,index)=>{
+  const slices=topItems.map((item,index)=>{
     const start=cursor;
     cursor+=(item.count/total)*100;
-    return `${palette[index]} ${start.toFixed(2)}% ${cursor.toFixed(2)}%`;
+    return `${DONUT_PALETTE[index % DONUT_PALETTE.length]} ${start.toFixed(2)}% ${cursor.toFixed(2)}%`;
   }).join(",");
 
-  const label=topFive.map(item=>`${item.name}: ${item.count}`).join(", ");
-  return `<div class="donut-layout">
-    <div class="donut-chart" role="img" aria-label="Top five keywords: ${esc(label)}" style="background:conic-gradient(${slices})">
-      <div class="donut-hole"><strong>${total}</strong><span>Top 5 uses</span></div>
+  const label=topItems.map(item=>`${item.name}: ${item.count}`).join(", ");
+  const subtitle=options.subtitle || `Top ${limit} uses`;
+  const hint=options.hint ? `<span class="expand-hint">${esc(options.hint)}</span>` : "";
+  const layoutClass=options.large?"donut-layout keyword-chart-grid":"donut-layout";
+  const body = `<div class="${layoutClass}">
+    <div class="donut-chart" role="img" aria-label="Top ${limit} keywords: ${esc(label)}" style="background:conic-gradient(${slices})">
+      <div class="donut-hole"><strong>${total}</strong><span>${esc(subtitle)}</span></div>
     </div>
-    <div class="donut-legend">${topFive.map((item,index)=>`<div class="donut-legend-row"><span class="donut-swatch" style="background:${palette[index]}"></span><span class="donut-name">${esc(item.name)}</span><strong>${item.count}</strong></div>`).join("")}</div>
-  </div>`;
+    <div class="donut-legend">${topItems.map((item,index)=>`<div class="donut-legend-row"><span class="donut-swatch" style="background:${DONUT_PALETTE[index % DONUT_PALETTE.length]}"></span><span class="donut-name">${esc(item.name)}</span><strong>${item.count}</strong></div>`).join("")}</div>
+  </div>${hint}`;
+  return options.interactive ? `<button class="dashboard-donut-trigger" type="button" id="openKeywordChart">${body}</button>` : body;
 }
 
 function page(id,scroll=true){
@@ -316,6 +321,8 @@ function bind(){
   $("booksInsightPanel").onkeydown=event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();openInsightList("books")}};
   $("closeInsightList").onclick=closeInsightList;
   $("insightListModal").onclick=event=>{if(event.target===$("insightListModal")) closeInsightList()};
+  $("closeKeywordChart").onclick=closeKeywordChartModal;
+  $("keywordChartModal").onclick=event=>{if(event.target===$("keywordChartModal")) closeKeywordChartModal()};
 
   $("exportJson").onclick=exportJSON;
   $("exportCsv").onclick=exportCSV;
@@ -326,7 +333,7 @@ function bind(){
   $("modal").onclick=event=>{if(event.target===$("modal")) closeModal()};
   $("mEdit").onclick=()=>{const id=currentModalId;closeModal();if(id) editPassage(id)};
   $("mDelete").onclick=async()=>{const id=currentModalId;closeModal();if(id) await deletePassage(id)};
-  document.addEventListener("keydown",event=>{if(event.key==="Escape"){closeModal();closeKeywordEditor();closeInsightList()}});
+  document.addEventListener("keydown",event=>{if(event.key==="Escape"){closeModal();closeKeywordEditor();closeInsightList();closeKeywordChartModal()}});
 
 }
 
@@ -496,7 +503,12 @@ function renderDashboard(){
   }).join("")}</div>`:emptyState("Your library is ready","Add your first passage.","Add passage","add");
   document.querySelectorAll("[data-recent-id]").forEach(item=>item.onclick=()=>viewPassage(item.dataset.recentId));
 
-  $("dashboardKeywords").innerHTML=donutChart(keywordSummary,"No keywords recorded yet.");
+  $("dashboardKeywords").innerHTML=donutChart(keywordSummary,"No keywords recorded yet.",5,{interactive:true,hint:"Tap or click to expand to a Top 10 view."});
+  const donutButton=$("openKeywordChart");
+  if(donutButton){
+    donutButton.onclick=openKeywordChartModal;
+    donutButton.onkeydown=event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();openKeywordChartModal()}};
+  }
   wireGoButtons();
 }
 
@@ -1214,6 +1226,16 @@ function openInsightList(kind){
 function closeInsightList(){
   $("insightListModal").classList.add("hide");
   currentInsightList=null;
+}
+
+function openKeywordChartModal(){
+  const data=connectedKeywordSummary();
+  $("keywordChartContent").innerHTML=data.length?`${donutChart(data,"No keywords recorded yet.",10,{subtitle:"Top 10 uses",large:true})}<p class="keyword-chart-note">This expanded view shows your ten most-used connected keywords. The center number reflects the combined total uses across these top ten keywords.</p>`:`<div class="empty insight-empty"><h3>No data yet</h3></div>`;
+  $("keywordChartModal").classList.remove("hide");
+}
+
+function closeKeywordChartModal(){
+  $("keywordChartModal").classList.add("hide");
 }
 
 function backupObject(){

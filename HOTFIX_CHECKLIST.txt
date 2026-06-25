@@ -1,16 +1,10 @@
-Walk Worthy v4.0.4 Hotfix
+Walk Worthy Website v4.0.5 hotfix
 
-Replace these files/folders in GitHub:
-- api/
-- app.js
-- index.html
-- package.json
-- styles.css
-- vercel.json
-
-No SQL migration is required.
-
-Visible fixes:
-1. Top 5 Keywords donut chart replaces the dashboard keyword bar list.
-2. Hero footprints are substantially smaller at the start and follow a lighter winding path.
-3. Sidebar version displays Walk Worthy v4.0.4.
+1. Upload all files from this package to GitHub, replacing existing files.
+2. Make sure the new assets/footprint-trail-exact.png file is uploaded too.
+3. Commit the changes.
+4. Let Vercel redeploy automatically.
+5. Refresh the browser and check:
+   - hero footprint trail now uses the approved exact artwork asset
+   - clicking the donut chart opens a larger Top 10 keyword popup
+   - version label shows Walk Worthy v4.0.5

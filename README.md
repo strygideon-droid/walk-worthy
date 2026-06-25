@@ -44,3 +44,8 @@ This hotfix makes two visible dashboard changes:
 
 - replaces the “Most recorded keywords” bar list with a Top 5 Keywords donut chart and legend;
 - resizes and repositions the hero footprints to match the approved concept more closely, with substantially smaller first prints and a smoother upward trail.
+
+
+## Hotfix v4.0.5
+- Replaced the dashboard hero footprints with the approved extracted footprint trail asset.
+- Made the dashboard donut chart clickable so it opens a larger Top 10 keyword view.
