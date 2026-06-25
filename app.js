@@ -1,5 +1,6 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
+const APP_VERSION = "4.0";
 const $ = id => document.getElementById(id);
 const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({
   "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
@@ -85,6 +86,51 @@ const SUGGESTION_RULES = [
   {name:"Wisdom",category:"Truth & Wisdom",types:["Do"],patterns:[/\bwisdom/i,/\bwise\b/i,/\bunderstanding/i]}
 ];
 
+// Version 4 broadens actionable phrase recognition and clearly separates existing and proposed keywords.
+SUGGESTION_RULES.push(
+  {name:"Testing God",category:"Spiritual Life",types:["Don't"],patterns:[/put (?:the lord|god).*to the test/i,/test (?:the lord|god)/i,/tempt (?:the lord|god)/i]},
+  {name:"Trust God",category:"Spiritual Life",types:["Do","Don't"],patterns:[/put (?:the lord|god).*to the test/i,/trust in (?:the lord|god)/i,/do not worry/i,/do not be afraid/i]},
+  {name:"Reverence",category:"Spiritual Life",types:["Do","Don't"],patterns:[/fear (?:the lord|god)/i,/reverence/i,/holy is his name/i,/put (?:the lord|god).*to the test/i]},
+  {name:"Do Not Worry",category:"Spiritual Life",types:["Don't"],patterns:[/do not worry/i,/do not be anxious/i,/anxious about/i]},
+  {name:"Courage",category:"Character",types:["Do"],patterns:[/do not be afraid/i,/take courage/i,/be strong and courageous/i,/do not fear/i]},
+  {name:"Avoid Anger",category:"Character",types:["Don't"],patterns:[/do not let the sun go down.*angry/i,/get rid of.*anger/i,/fits of rage/i,/human anger/i]},
+  {name:"Control Anger",category:"Character",types:["Do"],patterns:[/slow to become angry/i,/slow to anger/i,/control.*temper/i]},
+  {name:"Do Not Judge Hypocritically",category:"Love & Relationships",types:["Don't"],patterns:[/do not judge/i,/first take the plank out/i,/hypocrit/i]},
+  {name:"Correct Gently",category:"Speech",types:["Do"],patterns:[/restore.*gently/i,/correct.*gentl/i,/gentle instruction/i]},
+  {name:"Love Your Enemies",category:"Love & Relationships",types:["Do"],patterns:[/love your enemies/i,/pray for those who persecute/i,/bless those who curse/i]},
+  {name:"Do Not Retaliate",category:"Love & Relationships",types:["Don't"],patterns:[/do not repay.*evil/i,/turn.*other cheek/i,/eye for eye/i,/revenge/i]},
+  {name:"Peacemaking",category:"Love & Relationships",types:["Do"],patterns:[/peacemakers/i,/live at peace/i,/pursue peace/i,/make every effort.*peace/i]},
+  {name:"Do Not Show Favouritism",category:"Justice & Mercy",types:["Don't"],patterns:[/favoritism/i,/favouritism/i,/show.*partiality/i,/special attention.*rich/i]},
+  {name:"Care for Widows and Orphans",category:"Justice & Mercy",types:["Do"],patterns:[/orphans? and widows?/i,/widows? in their distress/i]},
+  {name:"Flee Idolatry",category:"Spiritual Life",types:["Don't"],patterns:[/flee from idolatry/i,/keep yourselves from idols/i,/idolatry/i]},
+  {name:"Avoid Pride",category:"Character",types:["Don't"],patterns:[/do not be proud/i,/pride/i,/boast/i,/conceit/i]},
+  {name:"Submit to God",category:"Spiritual Life",types:["Do"],patterns:[/submit yourselves.*god/i,/submit to god/i,/humble yourselves.*god/i]},
+  {name:"Resist the Devil",category:"Spiritual Life",types:["Do"],patterns:[/resist the devil/i,/stand against.*devil/i]},
+  {name:"Flee Temptation",category:"Purity & Self-Control",types:["Do","Don't"],patterns:[/flee.*tempt/i,/flee.*evil desires/i,/watch and pray.*temptation/i]},
+  {name:"Guard Your Speech",category:"Speech",types:["Do","Don't"],patterns:[/keep a tight rein.*tongue/i,/watch.*words/i,/tongue/i,/every careless word/i]},
+  {name:"Do Not Swear",category:"Speech",types:["Don't"],patterns:[/do not swear/i,/let your yes be yes/i,/oath/i]},
+  {name:"Give Thanks",category:"Spiritual Life",types:["Do"],patterns:[/give thanks/i,/thanksgiving/i,/be thankful/i]},
+  {name:"Rejoice",category:"Spiritual Life",types:["Do"],patterns:[/rejoice/i,/be joyful/i]},
+  {name:"Listen Before Speaking",category:"Speech",types:["Do"],patterns:[/quick to listen/i,/slow to speak/i]},
+  {name:"Do Not Quarrel",category:"Love & Relationships",types:["Don't"],patterns:[/do not quarrel/i,/quarrels?/i,/foolish.*arguments/i,/divisive/i]},
+  {name:"Bear One Another's Burdens",category:"Community & Service",types:["Do"],patterns:[/carry each other's burdens/i,/bear one another's burdens/i]},
+  {name:"Meet Together",category:"Community & Service",types:["Do"],patterns:[/not giving up meeting together/i,/gather together/i]},
+  {name:"Use Spiritual Gifts",category:"Community & Service",types:["Do"],patterns:[/use whatever gift/i,/spiritual gifts?/i,/gift.*serve/i]},
+  {name:"Do Not Conform to the World",category:"Spiritual Life",types:["Don't"],patterns:[/do not conform.*world/i,/pattern of this world/i]},
+  {name:"Renew Your Mind",category:"Spiritual Life",types:["Do"],patterns:[/renewing of your mind/i,/renew.*mind/i,/set your minds on/i]},
+  {name:"Avoid Drunkenness",category:"Purity & Self-Control",types:["Don't"],patterns:[/do not get drunk/i,/drunkenness/i,/drunkards?/i]},
+  {name:"Do Not Envy",category:"Character",types:["Don't"],patterns:[/envy/i,/jealousy/i]},
+  {name:"Keep Watch",category:"Spiritual Life",types:["Do"],patterns:[/keep watch/i,/be alert/i,/be vigilant/i,/watch out/i]},
+  {name:"Test Everything",category:"Truth & Wisdom",types:["Do"],patterns:[/test everything/i,/test the spirits/i,/examine.*carefully/i]},
+  {name:"Hold to What Is Good",category:"Truth & Wisdom",types:["Do"],patterns:[/hold on to what is good/i,/cling to what is good/i,/hold fast/i]},
+  {name:"Reject Evil",category:"Purity & Self-Control",types:["Don't"],patterns:[/reject every kind of evil/i,/abstain from.*evil/i,/hate what is evil/i]},
+  {name:"Confess Christ",category:"Spiritual Life",types:["Do"],patterns:[/acknowledge.*jesus/i,/confess.*jesus/i,/jesus christ has come in the flesh/i]},
+  {name:"Do Not Deny Christ",category:"Spiritual Life",types:["Don't"],patterns:[/denies? (?:the son|jesus|christ)/i,/disown.*me/i]},
+  {name:"Remember the Poor",category:"Justice & Mercy",types:["Do"],patterns:[/remember the poor/i,/give to the needy/i,/help the weak/i]},
+  {name:"Work Honestly",category:"Work & Responsibility",types:["Do"],patterns:[/work.*honest/i,/work.*hands/i,/steal no longer/i]},
+  {name:"Do Not Steal",category:"Work & Responsibility",types:["Don't"],patterns:[/must steal no longer/i,/do not steal/i,/thieves?/i]}
+);
+
 let sb;
 let session = null;
 let authMode = "signin";
@@ -104,6 +150,7 @@ let verseTimer;
 let enterPromise = null;
 let activeUserId = null;
 let currentModalId = null;
+let currentInsightList = null;
 let creedResizeObserver = null;
 
 function makeRequestId(){
@@ -197,11 +244,21 @@ function bind(){
   $("jesusCreed").onchange=handleCreedToggle;
   document.querySelectorAll("[data-creed-focus]").forEach(button=>button.onclick=()=>setCreedFocus(button.dataset.creedFocus));
 
-  ["search","bookFilter","typeFilter","kwFilter","favFilter"].forEach(id=>$(id).oninput=renderBrowse);
+  ["search","bookFilter","typeFilter","kwFilter","creedFilter","favFilter"].forEach(id=>$(id).oninput=renderBrowse);
   $("kwPageSearch").oninput=renderKeywordPage;
   $("catFilter").oninput=renderKeywordPage;
   $("showCreator").onclick=()=>$("creator").classList.toggle("hide");
   $("creatorSave").onclick=addKeywordFromPage;
+  $("keywordEditForm").onsubmit=saveKeywordEdit;
+  $("closeKeywordEdit").onclick=closeKeywordEditor;
+  $("cancelKeywordEdit").onclick=closeKeywordEditor;
+  $("keywordEditModal").onclick=event=>{if(event.target===$("keywordEditModal")) closeKeywordEditor()};
+  $("keywordsInsightPanel").onclick=()=>openInsightList("keywords");
+  $("booksInsightPanel").onclick=()=>openInsightList("books");
+  $("keywordsInsightPanel").onkeydown=event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();openInsightList("keywords")}};
+  $("booksInsightPanel").onkeydown=event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();openInsightList("books")}};
+  $("closeInsightList").onclick=closeInsightList;
+  $("insightListModal").onclick=event=>{if(event.target===$("insightListModal")) closeInsightList()};
 
   $("exportJson").onclick=exportJSON;
   $("exportCsv").onclick=exportCSV;
@@ -212,7 +269,7 @@ function bind(){
   $("modal").onclick=event=>{if(event.target===$("modal")) closeModal()};
   $("mEdit").onclick=()=>{const id=currentModalId;closeModal();if(id) editPassage(id)};
   $("mDelete").onclick=async()=>{const id=currentModalId;closeModal();if(id) await deletePassage(id)};
-  document.addEventListener("keydown",event=>{if(event.key==="Escape") closeModal()});
+  document.addEventListener("keydown",event=>{if(event.key==="Escape"){closeModal();closeKeywordEditor();closeInsightList()}});
 
 }
 
@@ -222,6 +279,7 @@ function populate(){
   const categories=CATEGORIES.map(category=>`<option>${category}</option>`).join("");
   $("newCat").innerHTML=categories;
   $("creatorCat").innerHTML=categories;
+  $("keywordEditCategory").innerHTML=categories;
   $("catFilter").innerHTML=`<option value="">All categories</option>${categories}`;
 }
 
@@ -371,6 +429,7 @@ function renderDashboard(){
   $("statBooks").textContent=new Set(passages.map(passage=>passage.book)).size;
   $("statTop").textContent=top?.count?top.name:"—";
   $("statTopNote").textContent=top?.count?`${top.count} passage${top.count===1?"":"s"}`:"No entries yet";
+  $("statCreed").textContent=passages.filter(passage=>passage.is_jesus_creed).length;
 
   $("recent").innerHTML=passages.length?`<div class="recent-list">${passages.slice(0,5).map(passage=>{
     const passageKeywords=keywordsFor(passage.id);
@@ -442,6 +501,8 @@ function getSelection(showError=true){
 
 function scheduleVerseLoad(){
   currentPassage=null;
+  $("loadVerse").classList.remove("hide");
+  $("loadVerse").textContent="Load now";
   $("verseBox").classList.add("hide");
   $("dupe").classList.add("hide");
   exactDuplicateBlocked=false;
@@ -456,8 +517,17 @@ function cleanText(value){
   return String(value||"").replace(/\s+/g," ").replace(/\s([,.;:!?])/g,"$1").trim();
 }
 
+function normaliseApiPassageId(rawId,bookCode,chapter,startVerse,endVerse){
+  const raw=String(rawId||"").trim().toUpperCase();
+  if(/^[1-3]?[A-Z]{2,3}\.\d+\.\d+-[1-3]?[A-Z]{2,3}\.\d+\.\d+$/.test(raw)) return raw;
+  if(/^[1-3]?[A-Z]{2,3}\.\d+\.\d+$/.test(raw)) return `${raw}-${raw}`;
+  if(bookCode&&chapter&&startVerse&&endVerse) return `${bookCode}.${chapter}.${startVerse}-${bookCode}.${chapter}.${endVerse}`;
+  return raw;
+}
+
 async function fetchSegment(segment){
-  const response=await fetch(`/api/verse?passageId=${encodeURIComponent(segment.apiPassageId)}`,{cache:"no-store"});
+  const passageId=normaliseApiPassageId(segment.apiPassageId,segment.bookCode,segment.chapter,segment.startVerse,segment.endVerse);
+  const response=await fetch(`/api/verse?passageId=${encodeURIComponent(passageId)}`,{cache:"no-store"});
   const data=await response.json();
   if(!response.ok) throw new Error(data.error||"The passage could not be loaded.");
   if(data.fumsToken) window.fums?.("trackView",data.fumsToken);
@@ -467,6 +537,7 @@ async function fetchSegment(segment){
 async function loadVerse(){
   const selected=getSelection();
   if(!selected) return;
+  $("loadVerse").classList.remove("hide");
   setBusy($("loadVerse"),true,"Loading…");
   $("verseStatus").textContent="Retrieving NIV passage…";
   try{
@@ -485,34 +556,43 @@ async function loadVerse(){
     $("verseCopyright").textContent=currentPassage.copyright;
     $("verseBox").classList.remove("hide");
     $("verseStatus").textContent="NIV passage loaded. Confirm it below.";
+    $("loadVerse").classList.add("hide");
     renderDuplicates(selected);
     renderSuggestions();
   }catch(error){
     currentPassage=null;
     $("verseBox").classList.add("hide");
     $("verseStatus").textContent=error.message;
+    $("loadVerse").classList.remove("hide");
+    $("loadVerse").textContent="Retry passage";
     toast(error.message);
   }finally{
     setBusy($("loadVerse"),false);
+    if(currentPassage){
+      $("loadVerse").classList.add("hide");
+    }else{
+      $("loadVerse").classList.remove("hide");
+      $("loadVerse").textContent="Retry passage";
+    }
     readiness();
   }
 }
 
 function segmentsForPassage(passage){
-  if(Array.isArray(passage.verse_segments)&&passage.verse_segments.length){
-    return passage.verse_segments.map(segment=>({
-      chapter:Number(segment.chapter??passage.start_chapter),
-      startVerse:Number(segment.startVerse??segment.start_verse),
-      endVerse:Number(segment.endVerse??segment.end_verse),
-      apiPassageId:segment.apiPassageId??segment.api_passage_id
-    }));
-  }
-  return [{
-    chapter:Number(passage.start_chapter),
-    startVerse:Number(passage.start_verse),
-    endVerse:Number(passage.end_verse),
-    apiPassageId:passage.api_passage_id
-  }];
+  const book=BOOKS.find(item=>item.name===passage.book);
+  const bookCode=book?.code||String(passage.api_passage_id||"").split(".")[0]||"";
+  const rawSegments=Array.isArray(passage.verse_segments)&&passage.verse_segments.length
+    ? passage.verse_segments
+    : [{chapter:passage.start_chapter,startVerse:passage.start_verse,endVerse:passage.end_verse,apiPassageId:passage.api_passage_id}];
+  return rawSegments.map(segment=>{
+    const chapter=Number(segment.chapter??passage.start_chapter);
+    const startVerse=Number(segment.startVerse??segment.start_verse??passage.start_verse);
+    const endVerse=Number(segment.endVerse??segment.end_verse??startVerse);
+    return {
+      chapter,startVerse,endVerse,bookCode,
+      apiPassageId:normaliseApiPassageId(segment.apiPassageId??segment.api_passage_id,bookCode,chapter,startVerse,endVerse)
+    };
+  });
 }
 
 function signatureForPassage(passage){
@@ -601,14 +681,20 @@ function renderSuggestions(){
   }
   $("suggestionHint").textContent="Suggestions focus on what Christians should practise or avoid.";
   if(!suggestions.length){
-    $("suggestions").innerHTML=`<span class="suggestion-empty">No strong suggestion found. Choose from your library or create your own.</span>`;
+    $("suggestions").innerHTML=`<span class="suggestion-empty">No strong suggestion found. Search your library or create a keyword below.</span>`;
     return;
   }
-  $("suggestions").innerHTML=suggestions.map(suggestion=>{
-    const existing=keywords.find(keyword=>keyword.name.toLowerCase()===suggestion.name.toLowerCase());
-    const selected=existing&&selectedKeywords.has(existing.id);
-    return `<button type="button" class="suggestion-chip ${selected?"selected":""} ${existing?"":"new"}" data-suggestion-name="${esc(suggestion.name)}" data-suggestion-category="${esc(suggestion.category)}">${esc(suggestion.name)}</button>`;
-  }).join("");
+  const existing=[];
+  const proposed=[];
+  suggestions.forEach(suggestion=>{
+    const keyword=keywords.find(item=>item.name.toLowerCase()===suggestion.name.toLowerCase());
+    (keyword?existing:proposed).push({...suggestion,keyword});
+  });
+  const renderGroup=(title,items,kind)=>items.length?`<div class="suggestion-group ${kind}"><div class="suggestion-group-title">${title}</div><div class="suggestion-group-chips">${items.map(suggestion=>{
+    const selected=suggestion.keyword&&selectedKeywords.has(suggestion.keyword.id);
+    return `<button type="button" class="suggestion-chip ${selected?"selected":""} ${kind==="proposed"?"new":""}" data-suggestion-name="${esc(suggestion.name)}" data-suggestion-category="${esc(suggestion.category)}"><span>${esc(suggestion.name)}</span>${kind==="proposed"?`<small>New · ${esc(suggestion.category)}</small>`:""}</button>`;
+  }).join("")}</div></div>`:"";
+  $("suggestions").innerHTML=renderGroup("Suggested existing keywords",existing,"existing")+renderGroup("Possible new keywords",proposed,"proposed");
   document.querySelectorAll("[data-suggestion-name]").forEach(button=>button.onclick=()=>chooseSuggestion(button.dataset.suggestionName,button.dataset.suggestionCategory));
 }
 
@@ -860,6 +946,7 @@ function renderBrowse(){
   const book=$("bookFilter").value;
   const type=$("typeFilter").value;
   const keyword=$("kwFilter").value;
+  const creed=$("creedFilter").value;
   const favourites=$("favFilter").checked;
 
   const list=passages.filter(passage=>{
@@ -867,7 +954,8 @@ function renderBrowse(){
     const types=classificationsFor(passage);
     const typeMatch=!type||(type==="Unclassified"?types.length===0:types.includes(type));
     const haystack=`${passage.reference} ${passage.comment||""} ${names.join(" ")} ${types.join(" ")}`.toLowerCase();
-    return (!query||haystack.includes(query))&&(!book||passage.book===book)&&typeMatch&&(!keyword||links.some(link=>link.passage_id===passage.id&&link.keyword_id===keyword))&&(!favourites||passage.is_favorite);
+    const creedMatch=!creed||(creed==="all"?passage.is_jesus_creed:creed==="none"?!passage.is_jesus_creed:passage.is_jesus_creed&&passage.jesus_creed_focus===creed);
+    return (!query||haystack.includes(query))&&(!book||passage.book===book)&&typeMatch&&(!keyword||links.some(link=>link.passage_id===passage.id&&link.keyword_id===keyword))&&creedMatch&&(!favourites||passage.is_favorite);
   });
 
   $("browseCount").textContent=`${list.length} of ${passages.length} passage${passages.length===1?"":"s"} shown`;
@@ -930,9 +1018,49 @@ function renderKeywordPage(){
   const query=$("kwPageSearch").value.trim().toLowerCase();
   const category=$("catFilter").value;
   const list=keywords.filter(keyword=>(!query||keyword.name.toLowerCase().includes(query))&&(!category||keyword.category===category)).sort((a,b)=>(counts[b.id]||0)-(counts[a.id]||0)||a.name.localeCompare(b.name));
-  $("kwGrid").innerHTML=list.length?list.map(keyword=>`<div class="keyword-card"><div class="keyword-card-top"><div><h3>${esc(keyword.name)}</h3><div class="keyword-category">${esc(keyword.category)}</div></div><div class="keyword-count">${counts[keyword.id]||0}</div></div><div class="keyword-actions"><button class="btn secondary small" data-keyword-view="${keyword.id}">View passages</button><button class="btn secondary small" data-keyword-delete="${keyword.id}" ${(counts[keyword.id]||0)?"disabled":""}>Delete</button></div></div>`).join(""):emptyState("No matching keywords","Try another search or category.");
+  $("kwGrid").innerHTML=list.length?list.map(keyword=>`<div class="keyword-card"><div class="keyword-card-top"><div><h3>${esc(keyword.name)}</h3><div class="keyword-category">${esc(keyword.category)}</div></div><div class="keyword-count">${counts[keyword.id]||0}</div></div><div class="keyword-actions"><button class="btn secondary small" data-keyword-view="${keyword.id}">View passages</button><button class="btn secondary small" data-keyword-edit="${keyword.id}">Edit</button><button class="btn secondary small" data-keyword-delete="${keyword.id}" ${(counts[keyword.id]||0)?"disabled":""}>Delete</button></div></div>`).join(""):emptyState("No matching keywords","Try another search or category.");
   document.querySelectorAll("[data-keyword-view]").forEach(button=>button.onclick=()=>{$("kwFilter").value=button.dataset.keywordView;page("browse")});
+  document.querySelectorAll("[data-keyword-edit]").forEach(button=>button.onclick=()=>openKeywordEditor(button.dataset.keywordEdit));
   document.querySelectorAll("[data-keyword-delete]").forEach(button=>button.onclick=()=>deleteKeyword(button.dataset.keywordDelete));
+}
+
+function openKeywordEditor(id){
+  const keyword=keywords.find(item=>item.id===id);
+  if(!keyword) return;
+  $("keywordEditId").value=keyword.id;
+  $("keywordEditName").value=keyword.name;
+  $("keywordEditCategory").value=keyword.category;
+  $("keywordEditModal").classList.remove("hide");
+  setTimeout(()=>$("keywordEditName").focus(),0);
+}
+
+function closeKeywordEditor(){
+  $("keywordEditModal").classList.add("hide");
+  $("keywordEditForm").reset();
+  $("keywordEditId").value="";
+}
+
+async function saveKeywordEdit(event){
+  event.preventDefault();
+  const id=$("keywordEditId").value;
+  const keyword=keywords.find(item=>item.id===id);
+  if(!keyword) return;
+  const name=$("keywordEditName").value.trim();
+  const category=$("keywordEditCategory").value;
+  if(!name) return toast("Enter a keyword name.");
+  const duplicate=keywords.find(item=>item.id!==id&&item.name.toLowerCase()===name.toLowerCase());
+  if(duplicate) return toast("Another keyword already uses that name.");
+  setBusy($("saveKeywordEdit"),true,"Saving…");
+  try{
+    const result=await sb.from("keywords").update({name,category}).eq("id",id).select().single();
+    if(result.error) throw result.error;
+    const index=keywords.findIndex(item=>item.id===id);
+    if(index>=0) keywords[index]=result.data;
+    keywords.sort((a,b)=>a.name.localeCompare(b.name));
+    closeKeywordEditor();
+    render();
+    toast("Keyword updated everywhere it is used.");
+  }catch(error){toast(error.message)}finally{setBusy($("saveKeywordEdit"),false)}
 }
 
 async function deleteKeyword(id){
@@ -998,17 +1126,43 @@ function renderInsights(){
 
   const doCount=passages.filter(passage=>classificationsFor(passage).includes("Do")).length;
   const dontCount=passages.filter(passage=>classificationsFor(passage).includes("Don't")).length;
-  $("snapshot").innerHTML=`<div class="snapshot-grid"><div class="snapshot"><span>Passages</span><strong>${passages.length}</strong></div><div class="snapshot"><span>Keywords Used</span><strong>${new Set(links.map(link=>link.keyword_id)).size}</strong></div><div class="snapshot"><span>Books Referenced</span><strong>${new Set(passages.map(passage=>passage.book)).size}</strong></div><div class="snapshot"><span>Jesus Creed</span><strong>${passages.filter(passage=>passage.is_jesus_creed).length}</strong></div></div>`;
+  $("snapshot").innerHTML=`<div class="snapshot-grid"><div class="snapshot"><span>Passages</span><strong>${passages.length}</strong></div><div class="snapshot"><span>Unique Keywords Used</span><strong>${new Set(links.map(link=>link.keyword_id)).size}</strong></div><div class="snapshot"><span>Books Referenced</span><strong>${new Set(passages.map(passage=>passage.book)).size}</strong></div><div class="snapshot"><span>Jesus Creed</span><strong>${passages.filter(passage=>passage.is_jesus_creed).length}</strong></div></div>`;
   $("iKw").innerHTML=barList(keywords.map(keyword=>({name:keyword.name,count:counts[keyword.id]||0})).filter(item=>item.count).sort((a,b)=>b.count-a.count).slice(0,10));
-  $("iBooks").innerHTML=barList(Object.entries(books).map(([name,count])=>({name,count})).sort((a,b)=>b.count-a.count));
+  const allBooks=Object.entries(books).map(([name,count])=>({name,count})).sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name));
+  $("iBooks").innerHTML=barList(allBooks.slice(0,10));
   $("iCats").innerHTML=barList(Object.entries(categories).map(([name,count])=>({name,count})).sort((a,b)=>b.count-a.count));
   $("iTypes").innerHTML=barList([{name:"Do",count:doCount},{name:"Don’t",count:dontCount}].filter(item=>item.count));
+}
+
+function insightKeywordData(){
+  const counts=keywordUsage();
+  return keywords.map(keyword=>({name:keyword.name,count:counts[keyword.id]||0})).filter(item=>item.count).sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name));
+}
+
+function insightBookData(){
+  const counts={};
+  passages.forEach(passage=>counts[passage.book]=(counts[passage.book]||0)+1);
+  return Object.entries(counts).map(([name,count])=>({name,count})).sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name));
+}
+
+function openInsightList(kind){
+  currentInsightList=kind;
+  const isKeywords=kind==="keywords";
+  const data=isKeywords?insightKeywordData():insightBookData();
+  $("insightListTitle").textContent=isKeywords?"All Keywords":"All Books Referenced";
+  $("insightListContent").innerHTML=data.length?`<div class="ranking-list">${data.map((item,index)=>`<div class="ranking-row"><span class="ranking-number">${index+1}</span><span class="ranking-name">${esc(item.name)}</span><strong>${item.count}</strong></div>`).join("")}</div>`:`<div class="empty"><h3>No data yet</h3></div>`;
+  $("insightListModal").classList.remove("hide");
+}
+
+function closeInsightList(){
+  $("insightListModal").classList.add("hide");
+  currentInsightList=null;
 }
 
 function backupObject(){
   return {
     app:"Walk Worthy",
-    version:3,
+    version:4,
     exported_at:new Date().toISOString(),
     passages:passages.map(({user_id,start_key,end_key,...rest})=>rest),
     keywords:keywords.map(({user_id,...rest})=>rest),

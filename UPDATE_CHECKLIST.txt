@@ -1,42 +1,46 @@
-WALK WORTHY WEBSITE VERSION 3 — UPDATE CHECKLIST
+WALK WORTHY WEBSITE VERSION 4 — UPDATE CHECKLIST
 
 BEFORE STARTING
-[x] JSON backup downloaded
+[ ] Download a fresh JSON backup from Walk Worthy.
 
 STEP 1 — SUPABASE
-1. Open Supabase.
-2. Open SQL Editor → New query.
-3. Open SQL_MIGRATION_v3.sql in Notepad.
-4. Copy all text and paste it into Supabase.
-5. Click Run.
-6. Continue only after it says: Success. No rows returned.
+1. Open Supabase → SQL Editor → New query.
+2. Open SQL_MIGRATION_v4.sql in Notepad.
+3. Copy all of it into the new query.
+4. Click Run.
+5. Continue after Supabase reports success.
 
 STEP 2 — GITHUB
 1. Open the existing walk-worthy repository.
 2. Click Add file → Upload files.
-3. Upload:
+3. Upload and replace:
    - api folder
    - app.js
    - index.html
    - package.json
    - styles.css
    - vercel.json
-4. Commit changes to main.
+4. Commit the changes to main.
 
 STEP 3 — VERCEL
-1. Vercel should deploy automatically after the GitHub commit.
-2. Wait until the newest deployment says Ready.
-3. Open the same Walk Worthy website address.
+1. Vercel should deploy automatically.
+2. Wait for the newest deployment to show Ready.
+3. Open the same Walk Worthy website.
 4. Press Ctrl + F5 once.
 
-STEP 4 — TEST
-1. Confirm the dashboard says Keywords Used and Books Referenced.
-2. Confirm Study Snapshot is at the top of Insights.
-3. Add a passage using non-consecutive verses, such as 1 John 2:12,15.
-4. Confirm the NIV text loads only those verses.
-5. Choose Do or Don't and check the suggested keywords.
-6. Save without a comment to confirm comments are optional.
-7. Open Browse Passages and tap the compact card.
-8. Confirm the popup shows the full NIV passage and comment area.
-9. Mark one passage as Jesus Creed and confirm it appears on the Jesus Creed page.
-10. Refresh and confirm the website opens normally.
+STEP 4 — QUICK TEST
+[ ] Sidebar shows Walk Worthy v4.0.
+[ ] Dashboard displays the gold winding footprints.
+[ ] Dashboard has a clickable Jesus Creed tally.
+[ ] Browse Passages has a Jesus Creed filter.
+[ ] An older single-verse passage opens without an invalid-reference error.
+[ ] Passage loading happens automatically.
+[ ] The large Load NIV button is gone.
+[ ] Matthew 4:7 suggests action-focused ideas such as Testing God, Trust God, or Reverence.
+[ ] Suggestions are split into existing and possible new keywords.
+[ ] Keywords page has an Edit button.
+[ ] Editing a keyword preserves its passage count and connections.
+[ ] Insights says Unique Keywords Used.
+[ ] Top Keywords and Books Referenced show only 10 by default.
+[ ] Clicking either Insight panel opens the full list.
+[ ] JSON backup still downloads.

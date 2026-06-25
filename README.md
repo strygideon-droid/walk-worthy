@@ -1,35 +1,61 @@
-# Walk Worthy Website — Version 3
+# Walk Worthy Website — Version 4
 
-This is a website update for the existing Walk Worthy Vercel project. It is **not** an installable app/PWA.
+Version 4 updates the existing Walk Worthy website. It keeps the same Vercel address, Supabase project, login, and saved study data.
 
-## Version 3 features
+## Version 4 updates
 
-- Action-focused keyword suggestions after the NIV passage and Do/Don't choice
-- Suggestions focus on how Christians should live, not merely general words in the passage
-- Study Snapshot moved to the top of Insights
-- Compact Browse Passage cards
-- Comments hidden from Browse cards
-- Full NIV text, classifications, keywords, and optional comment in an in-app popup
-- Non-consecutive verses such as `12,15` and mixed selections such as `12-13,15`
-- Comments are optional
-- Dashboard wording changed to **Keywords Used**
-- Recent Passages shows keywords instead of comments
-- Jesus Creed checkbox with Love God / Love Others / Both
-- Dedicated Jesus Creed visual page with clickable verse bubbles
-- Existing login, cloud sync, JSON backup, CSV export, duplicate protection, and mobile browser access remain
+### Add Passage
+- Smarter action-focused keyword suggestions
+- Suggestions are separated into:
+  - **Suggested existing keywords**
+  - **Possible new keywords**
+- Wider recognition of biblical commands and warnings, including phrases such as testing God, worry, retaliation, pride, quarrelling, idolatry, drunkenness, and guarding speech
+- The large NIV loading button is removed
+- Passages still load automatically
+- A small **Load now / Retry passage** button appears only while a reference has changed or loading fails
 
-## Important update order
+### Browse Passages
+- New Jesus Creed filter:
+  - Jesus Creed only
+  - Love God
+  - Love Others
+  - Both
+  - Not Jesus Creed
+- Older single-verse entries are recognised automatically instead of showing an invalid-reference error
 
-1. Keep the JSON backup you already downloaded.
-2. Run `SQL_MIGRATION_v3.sql` in Supabase SQL Editor.
-3. Upload the website files to the existing GitHub `walk-worthy` repository.
-4. Commit the changes to the `main` branch.
-5. Vercel should redeploy automatically.
-6. When Vercel shows **Ready**, open the existing website address and press `Ctrl + F5` once.
+### Dashboard
+- New clickable Jesus Creed tally
+- Approved gold footprint trail in the dashboard hero
+- Connected bare footprints with no heel-separation line
+- Winding path, larger first steps, and gradual shrinking/fading toward the upper-right
+
+### Insights
+- **Unique Keywords Used** now explicitly counts distinct connected keywords
+- Top Keywords shows only the top 10 on the main page
+- Books Referenced shows only the top 10 on the main page
+- Clicking either panel opens the full ranked list in an in-app popup
+
+### Keywords
+- Every keyword has an **Edit** button
+- Correct spelling or rename a keyword
+- Change its theme/category
+- All existing passage connections remain intact
+
+### Sidebar
+- Displays **Walk Worthy v4.0** near the account section
+
+## Safe update order
+
+1. Download a fresh JSON backup from the current website.
+2. Run `SQL_MIGRATION_v4.sql` in Supabase SQL Editor.
+3. Upload the replacement website files to the existing GitHub repository.
+4. Commit to `main`.
+5. Wait for Vercel to show the new deployment as **Ready**.
+6. Open the normal Walk Worthy URL and press `Ctrl + F5` once.
 
 ## Files to upload to GitHub
 
-Upload these files and folders from this package:
+Upload and replace:
 
 - `api/`
 - `app.js`
@@ -38,18 +64,8 @@ Upload these files and folders from this package:
 - `styles.css`
 - `vercel.json`
 
-You do not need to upload the SQL migration to GitHub. It is only run once in Supabase.
+Do not upload the ZIP itself. `SQL_MIGRATION_v4.sql` is run once in Supabase and does not need to be uploaded to GitHub.
 
 ## Data safety
 
-The migration adds new columns and a new save function. It does not delete existing passages, keywords, or passage-keyword connections.
-
-Existing passages are automatically converted into Version 3's verse-segment format.
-
-## Keyword suggestions
-
-Suggestions are generated inside the website from the NIV wording and your Do/Don't selection. They are never selected automatically. A suggested keyword is created only when you click it.
-
-## Website only
-
-This package deliberately contains no app manifest, service worker, install prompt, app icons, or offline mode.
+The SQL migration only repairs the API.Bible reference format used by older single-verse entries. It does not delete passages, comments, keywords, favourites, classifications, Jesus Creed settings, or passage-keyword links.

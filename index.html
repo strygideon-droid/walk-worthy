@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#10243f">
   <meta name="description" content="A private Christian living Bible-study library.">
   <title>Walk Worthy</title>
-  <link rel="stylesheet" href="/styles.css?v=3.0.0">
+  <link rel="stylesheet" href="/styles.css?v=4.0.0">
 </head>
 <body>
   <section id="loading" class="loading-screen">
@@ -67,6 +67,7 @@
         <div class="account-label">Signed in as</div>
         <div id="accountEmail" class="account-email"></div>
         <button id="logout" class="btn ghost small full">Sign out</button>
+        <div class="app-version">Walk Worthy v4.0</div>
       </div>
     </aside>
 
@@ -85,6 +86,15 @@
             <button class="btn gold" data-go="add">＋ Add a passage</button>
             <button class="btn light" data-go="browse">Browse library</button>
           </div>
+          <div class="footprint-trail" aria-hidden="true">
+            <svg class="footprint fp1" viewBox="0 0 52 96"><path d="M28 91C17 92 10 82 12 68c2-12-1-20-3-29C6 25 11 12 21 9c10-3 18 6 18 18 0 12-6 21-5 33 1 10 8 19 4 25-2 4-6 6-10 6Z"/><circle cx="15" cy="8" r="5"/><circle cx="23" cy="5" r="5.6"/><circle cx="32" cy="6.5" r="5.2"/><circle cx="39" cy="11" r="4.6"/><circle cx="43" cy="18" r="4"/></svg>
+            <svg class="footprint fp2" viewBox="0 0 52 96"><path d="M28 91C17 92 10 82 12 68c2-12-1-20-3-29C6 25 11 12 21 9c10-3 18 6 18 18 0 12-6 21-5 33 1 10 8 19 4 25-2 4-6 6-10 6Z"/><circle cx="15" cy="8" r="5"/><circle cx="23" cy="5" r="5.6"/><circle cx="32" cy="6.5" r="5.2"/><circle cx="39" cy="11" r="4.6"/><circle cx="43" cy="18" r="4"/></svg>
+            <svg class="footprint fp3" viewBox="0 0 52 96"><path d="M28 91C17 92 10 82 12 68c2-12-1-20-3-29C6 25 11 12 21 9c10-3 18 6 18 18 0 12-6 21-5 33 1 10 8 19 4 25-2 4-6 6-10 6Z"/><circle cx="15" cy="8" r="5"/><circle cx="23" cy="5" r="5.6"/><circle cx="32" cy="6.5" r="5.2"/><circle cx="39" cy="11" r="4.6"/><circle cx="43" cy="18" r="4"/></svg>
+            <svg class="footprint fp4" viewBox="0 0 52 96"><path d="M28 91C17 92 10 82 12 68c2-12-1-20-3-29C6 25 11 12 21 9c10-3 18 6 18 18 0 12-6 21-5 33 1 10 8 19 4 25-2 4-6 6-10 6Z"/><circle cx="15" cy="8" r="5"/><circle cx="23" cy="5" r="5.6"/><circle cx="32" cy="6.5" r="5.2"/><circle cx="39" cy="11" r="4.6"/><circle cx="43" cy="18" r="4"/></svg>
+            <svg class="footprint fp5" viewBox="0 0 52 96"><path d="M28 91C17 92 10 82 12 68c2-12-1-20-3-29C6 25 11 12 21 9c10-3 18 6 18 18 0 12-6 21-5 33 1 10 8 19 4 25-2 4-6 6-10 6Z"/><circle cx="15" cy="8" r="5"/><circle cx="23" cy="5" r="5.6"/><circle cx="32" cy="6.5" r="5.2"/><circle cx="39" cy="11" r="4.6"/><circle cx="43" cy="18" r="4"/></svg>
+            <svg class="footprint fp6" viewBox="0 0 52 96"><path d="M28 91C17 92 10 82 12 68c2-12-1-20-3-29C6 25 11 12 21 9c10-3 18 6 18 18 0 12-6 21-5 33 1 10 8 19 4 25-2 4-6 6-10 6Z"/><circle cx="15" cy="8" r="5"/><circle cx="23" cy="5" r="5.6"/><circle cx="32" cy="6.5" r="5.2"/><circle cx="39" cy="11" r="4.6"/><circle cx="43" cy="18" r="4"/></svg>
+            <svg class="footprint fp7" viewBox="0 0 52 96"><path d="M28 91C17 92 10 82 12 68c2-12-1-20-3-29C6 25 11 12 21 9c10-3 18 6 18 18 0 12-6 21-5 33 1 10 8 19 4 25-2 4-6 6-10 6Z"/><circle cx="15" cy="8" r="5"/><circle cx="23" cy="5" r="5.6"/><circle cx="32" cy="6.5" r="5.2"/><circle cx="39" cy="11" r="4.6"/><circle cx="43" cy="18" r="4"/></svg>
+          </div>
         </div>
 
         <div class="stats-grid">
@@ -92,6 +102,7 @@
           <div class="stat-card"><span>Keywords Used</span><strong id="statKeywords">0</strong><small>Unique connected keywords</small></div>
           <div class="stat-card"><span>Books Referenced</span><strong id="statBooks">0</strong><small>Out of 27 NT books</small></div>
           <div class="stat-card"><span>Leading Keyword</span><strong id="statTop" class="stat-word">—</strong><small id="statTopNote">No entries yet</small></div>
+          <button class="stat-card stat-link" data-go="creed" type="button"><span>Jesus Creed</span><strong id="statCreed">0</strong><small>Marked passages · Open page</small></button>
         </div>
 
         <div class="two-col">
@@ -121,9 +132,8 @@
               <div class="field"><label for="book">Book</label><select id="book" required></select></div>
               <div class="field"><label for="chapter">Chapter</label><input id="chapter" class="input" type="number" min="1" required></div>
               <div class="field verse-field"><label for="verse">Verse, range, or list</label><input id="verse" class="input" type="text" placeholder="e.g. 12,15 or 12–13,15" required></div>
-              <button id="loadVerse" class="btn primary load-btn" type="button">Load NIV passage</button>
             </div>
-            <div id="verseStatus" class="status muted">Select a New Testament passage.</div>
+            <div class="status-row"><div id="verseStatus" class="status muted">Select a New Testament passage.</div><button id="loadVerse" class="btn secondary small reload-btn hide" type="button">Load now</button></div>
             <div id="verseBox" class="verse-box hide">
               <div class="verse-head"><div><span class="niv-badge">NIV</span><h3 id="verseRef"></h3></div><span id="verseCount" class="muted"></span></div>
               <div id="verseText" class="scripture"></div>
@@ -191,6 +201,7 @@
           <select id="bookFilter"></select>
           <select id="typeFilter"><option value="">All Do / Don’t</option><option>Do</option><option value="Don't">Don’t</option><option>Unclassified</option></select>
           <select id="kwFilter"></select>
+          <select id="creedFilter"><option value="">All Jesus Creed</option><option value="all">Jesus Creed only</option><option value="Love God">Love God</option><option value="Love Others">Love Others</option><option value="Both">Both</option><option value="none">Not Jesus Creed</option></select>
           <label class="filter-check"><input id="favFilter" type="checkbox"> Favourites</label>
         </div>
         <div id="browseCount" class="result-count"></div>
@@ -214,8 +225,8 @@
         <div class="page-head"><div><div class="eyebrow">Patterns in your study</div><h2>Insights</h2><p>These figures reflect your personal tagging choices.</p></div></div>
         <div class="panel snapshot-panel"><div class="panel-head"><div><h3>Study Snapshot</h3><p>Your quick overview</p></div></div><div id="snapshot"></div></div>
         <div class="insight-grid">
-          <div class="panel"><div class="panel-head"><div><h3>Top keywords</h3><p>Your most frequently connected themes</p></div></div><div id="iKw"></div></div>
-          <div class="panel"><div class="panel-head"><div><h3>Books referenced</h3><p>Where your entries come from</p></div></div><div id="iBooks"></div></div>
+          <div id="keywordsInsightPanel" class="panel insight-expand" role="button" tabindex="0"><div class="panel-head"><div><h3>Top keywords</h3><p>Top 10 · Tap to see the complete list</p></div><span class="expand-hint">View all ›</span></div><div id="iKw"></div></div>
+          <div id="booksInsightPanel" class="panel insight-expand" role="button" tabindex="0"><div class="panel-head"><div><h3>Books referenced</h3><p>Top 10 · Tap to see the complete list</p></div><span class="expand-hint">View all ›</span></div><div id="iBooks"></div></div>
           <div class="panel"><div class="panel-head"><div><h3>Theme categories</h3><p>Broader areas of Christian living</p></div></div><div id="iCats"></div></div>
           <div class="panel"><div class="panel-head"><div><h3>Do and Don’t</h3><p>Your positive and negative instructions</p></div></div><div id="iTypes"></div></div>
         </div>
@@ -226,7 +237,7 @@
         <div class="backup-grid">
           <div class="panel backup-card"><div class="backup-icon">⬇</div><h3>Complete JSON backup</h3><p>Includes passages, verse selections, comments, keywords, Jesus Creed links, favourites, and timestamps.</p><button id="exportJson" class="btn primary">Download JSON</button></div>
           <div class="panel backup-card"><div class="backup-icon">▦</div><h3>CSV for Excel</h3><p>A spreadsheet-friendly copy of your passage library.</p><button id="exportCsv" class="btn primary">Download CSV</button></div>
-          <div class="panel backup-card"><div class="backup-icon">↥</div><h3>Restore JSON</h3><p>Restores Version 2.1 or Version 3 backups into this account.</p><button id="restoreBtn" class="btn secondary">Choose backup file</button><input id="restoreFile" type="file" accept=".json,application/json" class="hide"></div>
+          <div class="panel backup-card"><div class="backup-icon">↥</div><h3>Restore JSON</h3><p>Restores Version 2.1, Version 3, or Version 4 backups into this account.</p><button id="restoreBtn" class="btn secondary">Choose backup file</button><input id="restoreFile" type="file" accept=".json,application/json" class="hide"></div>
         </div>
         <div class="notice"><strong>NIV wording is not stored in your database export.</strong> The app saves references and your own study data, then securely retrieves NIV text when a passage is displayed.</div>
       </section>
@@ -249,10 +260,30 @@
     </div>
   </div>
 
+  <div id="keywordEditModal" class="modal hide" role="dialog" aria-modal="true" aria-labelledby="keywordEditTitle">
+    <div class="modal-card compact-modal">
+      <div class="modal-head"><div><div class="eyebrow">Keyword library</div><h2 id="keywordEditTitle">Edit Keyword</h2></div><button id="closeKeywordEdit" class="icon-btn" aria-label="Close">✕</button></div>
+      <form id="keywordEditForm" class="modal-form">
+        <input id="keywordEditId" type="hidden">
+        <div class="field"><label for="keywordEditName">Keyword name</label><input id="keywordEditName" class="input" type="text" required></div>
+        <div class="field"><label for="keywordEditCategory">Theme / category</label><select id="keywordEditCategory"></select></div>
+        <p class="modal-note">All existing passage connections will remain intact.</p>
+        <div class="modal-actions"><button id="cancelKeywordEdit" class="btn secondary" type="button">Cancel</button><button id="saveKeywordEdit" class="btn gold" type="submit">Save changes</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div id="insightListModal" class="modal hide" role="dialog" aria-modal="true" aria-labelledby="insightListTitle">
+    <div class="modal-card list-modal">
+      <div class="modal-head"><div><div class="eyebrow">Complete ranking</div><h2 id="insightListTitle"></h2></div><button id="closeInsightList" class="icon-btn" aria-label="Close">✕</button></div>
+      <div id="insightListContent" class="full-ranking"></div>
+    </div>
+  </div>
+
   <div id="toast" class="toast"></div>
 
   <script src="https://pkg.api.bible/fumsV3.min.js"></script>
   <script>window.fumsData=window.fumsData||[];window.fums=window.fums||function(){window.fumsData.push(arguments)}</script>
-  <script type="module" src="/app.js?v=3.0.0"></script>
+  <script type="module" src="/app.js?v=4.0.0"></script>
 </body>
 </html>
